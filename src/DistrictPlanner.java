@@ -15,7 +15,7 @@ import districtobjects.WaterBody;
  * 
  */
 
-//awebhfloahweilfhuaw;oehoh
+//awebhfloahweilfhuaw;o
 
 public class DistrictPlanner {
 	Random random;
