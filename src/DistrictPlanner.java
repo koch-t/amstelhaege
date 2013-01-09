@@ -16,6 +16,7 @@ import districtobjects.WaterBody;
  */
 
 //TODO make simple correct algorithm
+//what the 
 
 public class DistrictPlanner {
 	Random random;
