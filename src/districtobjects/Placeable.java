@@ -1,6 +1,6 @@
 package districtobjects;
 
-public abstract class Placeable {
+public abstract class Placeable implements Cloneable {
 	private double x;
 	private double y;
 	private double width;
@@ -85,4 +85,9 @@ public abstract class Placeable {
 		width = height;
 		height = tmp;
 	}
+	
+	public abstract Placeable clone();
+
+
+
 }
