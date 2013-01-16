@@ -23,11 +23,4 @@ public class Cottage extends Residence {
 	public String getType() {
 		return "Cottage";
 	}
-
-
-	@Override
-	public Placeable clone() {
-		return new Cottage(getX(),getY());
-	}
-	
 }

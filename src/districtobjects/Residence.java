@@ -31,6 +31,4 @@ public abstract class Residence extends Placeable {
 	}
 	
 	public abstract String getType();
-
-		
 }

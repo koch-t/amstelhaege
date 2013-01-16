@@ -7,7 +7,7 @@ package districtobjects;
  * @author bweel
  *
  */
-public class Bungalow extends Residence  {
+public class Bungalow extends Residence {
 
 	public Bungalow() {
 		super(10.0, 7.5, 399000, 3, 0.04);
@@ -22,11 +22,6 @@ public class Bungalow extends Residence  {
 	@Override
 	public String getType() {
 		return "Bungalow";
-	}
-
-	@Override
-	public Placeable clone() {
-		return new Bungalow(getX(),getY());
 	}
 
 }

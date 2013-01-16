@@ -4,7 +4,6 @@ import districtobjects.Ground;
 import districtobjects.Placeable;
 import districtobjects.Residence;
 import districtobjects.WaterBody;
-import exceptions.ObjectNotFoundException;
 
 /**
  * Eisen aan de wijk
@@ -51,16 +50,6 @@ public class Groundplan {
 		residences.add(residence);
 	}
 	
-	public void deleteResidence(Residence residence) throws Exception
-	{
-		if(!residences.contains(residence))
-		{
-			throw new ObjectNotFoundException("residence does not exist in Groundplan");
-		}
-		if(!residences.remove(residence))
-			throw new Exception("The residence was not removed by unknown reason");
-		
-	}
 	public void addWaterBody(WaterBody waterBody){
 		waterBodies.add(waterBody);
 	}

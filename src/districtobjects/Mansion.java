@@ -22,11 +22,4 @@ public class Mansion extends Residence {
 	public String getType() {
 		return "Mansion";
 	}
-
-	@Override
-	public Placeable clone() {
-		return new Mansion(getX(),getY());
-	}
-
-
 }

@@ -14,4 +14,41 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>JGraphT/TGGraphLayout.jar</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/Downloads/jgrapht-0.8.3/lib/TGGraphLayout.jar</locationURI>
+		</link>
+		<link>
+			<name>JGraphT/jgraph.jar</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/Downloads/jgrapht-0.8.3/lib/jgraph.jar</locationURI>
+		</link>
+		<link>
+			<name>JGraphT/junit.jar</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/Downloads/jgrapht-0.8.3/lib/junit.jar</locationURI>
+		</link>
+		<link>
+			<name>JGraphT/lib-readme.txt</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/Downloads/jgrapht-0.8.3/lib/lib-readme.txt</locationURI>
+		</link>
+		<link>
+			<name>JGraphT/svnClientAdapter.jar</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/Downloads/jgrapht-0.8.3/lib/svnClientAdapter.jar</locationURI>
+		</link>
+		<link>
+			<name>JGraphT/svnant.jar</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/Downloads/jgrapht-0.8.3/lib/svnant.jar</locationURI>
+		</link>
+		<link>
+			<name>JGraphT/xmlunit1.0.jar</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/Downloads/jgrapht-0.8.3/lib/xmlunit1.0.jar</locationURI>
+		</link>
+	</linkedResources>
 </projectDescription>
