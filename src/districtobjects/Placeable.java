@@ -85,4 +85,56 @@ public abstract class Placeable {
 		width = height;
 		height = tmp;
 	}
+	
+	public double getDistance(Placeable other){
+		double distance = 0;
+		if(this != other){
+			if(this.leftEdge() <= other.rightEdge()
+				&& this.rightEdge() >= other.leftEdge()
+				&& this.topEdge() <= other.bottomEdge()
+				&& this.bottomEdge() >= other.topEdge()){
+				// Houses are intersecting, distance is 0.
+				return 0;
+			}else if(this.leftEdge() < other.rightEdge()
+					&& this.rightEdge() > other.leftEdge()
+					&& this.topEdge() > other.bottomEdge()){
+				// Residence is completely below
+				distance = this.topEdge() - other.bottomEdge();
+			}else if(this.leftEdge() < other.rightEdge()
+					&& this.rightEdge() > other.leftEdge()
+					&& this.bottomEdge() < other.topEdge()){
+				// Residence is completely above
+				distance = other.topEdge() - this.bottomEdge();
+			}else if(this.bottomEdge() > other.topEdge()
+					&& this.topEdge() < other.bottomEdge()
+					&& this.rightEdge() < other.leftEdge()){
+				// Residence is completely to the left
+				distance = other.leftEdge() - this.rightEdge();
+			}else if(this.bottomEdge() > other.topEdge()
+					&& this.topEdge() < other.bottomEdge()
+					&& this.leftEdge() > other.rightEdge()){
+				// Residence is completely to the right
+				distance = this.leftEdge() - other.rightEdge();
+			}else if(this.rightEdge() > other.leftEdge()
+					&& this.topEdge() < other.bottomEdge()){
+				// Residence is to top right
+				distance = Math.sqrt(Math.pow(this.leftEdge() - other.rightEdge(),2) + Math.pow(other.topEdge() - this.bottomEdge(),2));
+			}else if(this.leftEdge() < other.rightEdge()
+					&& this.topEdge() < other.bottomEdge()){
+				// Residence is to top left
+				distance = Math.sqrt(Math.pow(other.leftEdge() - this.rightEdge(),2) + Math.pow(other.topEdge() - this.bottomEdge(),2));
+			}else if(this.rightEdge() > other.leftEdge()
+					&& this.bottomEdge() > other.topEdge()){
+				// Residence is to the bottom right
+				distance = Math.sqrt(Math.pow(this.leftEdge() - other.rightEdge(),2) + Math.pow(this.topEdge() - other.bottomEdge(),2));
+			}else if(this.leftEdge() < other.rightEdge()
+					&& this.bottomEdge() > other.topEdge()){
+				// Residence is to the bottom left
+				distance = Math.sqrt(Math.pow(other.leftEdge() - this.rightEdge(),2) + Math.pow(this.topEdge() - other.bottomEdge(),2));
+			}
+		}else{
+			distance = Double.MAX_VALUE;
+		}
+		return distance;
+	}
 }

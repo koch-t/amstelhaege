@@ -31,8 +31,7 @@ public class Graph{
 	}
 	
 	public double distanceBetween(Vertex v1, Vertex v2){
-		//TODO implement
-		return Double.NaN;
+		return v1.getPlaceable().getDistance(v2.getPlaceable());
 	}
 	
 	public ArrayList<Vertex> buildGraph(Groundplan plan){
