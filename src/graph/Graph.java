@@ -34,14 +34,7 @@ public class Graph{
 		return v1.getPlaceable().getDistance(v2.getPlaceable());
 	}
 	
-	public ArrayList<Vertex> buildGraph(Groundplan plan){
-		ArrayList<Vertex> vertices = new ArrayList<Vertex>(100);
-		for (Residence r: plan.getResidences()){
-			vertices.add(new Vertex(r));
-		}
-		for (WaterBody w: plan.getWaterBodies()){
-			vertices.add(new Vertex(w));
-		}
+	public ArrayList<Vertex> setNearestNeighbours(){
 		Vertex wall = new Vertex(true);
 		for (Vertex v1 : vertices){
 			Vertex nearest = wall;
@@ -56,6 +49,17 @@ public class Graph{
 				}
 			}
 			v1.setToVertex(nearest);
+		}
+		return vertices;
+	}
+	
+	public ArrayList<Vertex> buildGraph(Groundplan plan){
+		ArrayList<Vertex> vertices = new ArrayList<Vertex>(100);
+		for (Residence r: plan.getResidences()){
+			vertices.add(new Vertex(r));
+		}
+		for (WaterBody w: plan.getWaterBodies()){
+			vertices.add(new Vertex(w));
 		}
 		return vertices;
 	}
