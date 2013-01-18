@@ -10,9 +10,11 @@ import districtobjects.WaterBody;
 public class Graph{
 	
 	private Groundplan plan;
+	private ArrayList<Vertex> vertices;
 
 	public Graph(Groundplan plan){
 		this.plan = plan;
+		this.vertices = buildGraph(plan);
 	}
 	
 	public double distanceToWall(Vertex v){
@@ -33,7 +35,7 @@ public class Graph{
 		return Double.NaN;
 	}
 	
-	public ArrayList<Vertex> buildGraph(){
+	public ArrayList<Vertex> buildGraph(Groundplan plan){
 		ArrayList<Vertex> vertices = new ArrayList<Vertex>(100);
 		for (Residence r: plan.getResidences()){
 			vertices.add(new Vertex(r));
@@ -57,5 +59,13 @@ public class Graph{
 			v1.setToVertex(nearest);
 		}
 		return vertices;
+	}
+
+	public ArrayList<Vertex> getVertices() {
+		return vertices;
+	}
+
+	public void setVertices(ArrayList<Vertex> vertices) {
+		this.vertices = vertices;
 	}
 }
