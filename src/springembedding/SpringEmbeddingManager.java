@@ -1,6 +1,6 @@
 package springembedding;
 
-import 
+import graph.Graph;
 
 //Class that manages the spring embedding algorithm
 public class SpringEmbeddingManager {

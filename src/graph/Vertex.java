@@ -9,10 +9,11 @@ import districtobjects.Placeable;
  * @author thomas
  */
 
-public class Vertex {
+public class Vertex implements Cloneable{
     private Placeable p;
     private boolean isfixed;
-    private double velocity;
+    private Tuple velocity;
+    private double mass;
     private Vertex toVertex;
     
     public class Position{
@@ -22,6 +23,13 @@ public class Vertex {
     		this.y = y;
     	}
      }
+    
+    @Override
+    public Vertex clone(){
+    	Vertex clone = new Vertex(this.p,isfixed);
+    	clone.velocity = velocity;
+    	return clone;
+    }
     
     public Vertex(Placeable p){
     	this(p,false);
@@ -54,7 +62,7 @@ public class Vertex {
      * @return Veolicty of the vertex
      */
 
-	public double getVelocity() {
+	public Tuple getVelocity() {
 		return velocity;
 	}
 	
@@ -62,7 +70,7 @@ public class Vertex {
      * set the veolicity of the vertex
      */
 
-	public void setVelocity(double velocity) {
+	public void setVelocity(Tuple velocity) {
 		this.velocity = velocity;
 	}
 	
@@ -81,5 +89,13 @@ public class Vertex {
 	
 	public Placeable getPlaceable(){
 		return this.p;
+	}
+
+	public double getMass() {
+		return mass;
+	}
+
+	public void setMass(double mass) {
+		this.mass = mass;
 	}
 }
