@@ -167,7 +167,9 @@ public class Groundplan {
 	public double getPlanValue(){
 		double value = 0;
 		for(Residence residence : residences){
-			value += getResidenceValue(residence);
+			if(isCorrectlyPlaced(residence)){   
+				value += getResidenceValue(residence);
+			}
 		}
 		return value;
 	}
@@ -175,7 +177,9 @@ public class Groundplan {
 	public double getPlanCummulativeDistance(){
 		double value = 0;
 		for(Residence residence : residences){
+			if(isCorrectlyPlaced(residence)){
 			value += getValueDistance(residence);
+			}
 		}
 		return value;
 	}
