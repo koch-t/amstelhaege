@@ -11,23 +11,22 @@ public class SpringEmbedding {
 		Tuple total_kinetic_energy = new Tuple();
 		for (Vertex v : vertices){
 			Tuple netto_sum = new Tuple();
-			
-	        /*for each other node
-             * net-force := net-force + Coulomb_repulsion( this_node, other_node )
-             * next node
-             */
-			netto_sum.sum((Tuple.coulomb_repulsion(v,v.getToVertex())));
-			
-			/*
-			 *   for each spring connected to this node
-             *   net-force := net-force + Hooke_attraction( this_node, spring )
-             *   next spring
+
+			/*for each other node
+			 * net-force := net-force + Coulomb_repulsion( this_node, other_node )
+			 * next node
 			 */
 			for (Vertex v_other : vertices){
 				if (v_other == v)
 					continue;
-				netto_sum.sum((Tuple.hooke_attraction(v,v.getToVertex())));
+				netto_sum.sum((Tuple.coulomb_repulsion(v,v_other)));
 			}
+			/*
+			 *   for each spring connected to this node
+			 *   net-force := net-force + Hooke_attraction( this_node, spring )
+			 *   next spring
+			 */
+			netto_sum.sum((Tuple.hooke_attraction(v,v.getToVertex())));
 			//v.velocity := (v.velocity + timestep * net-force) * damping
 			v.getVelocity().dx = (v.getVelocity().dx * TIMESTEP * netto_sum.dx) * DAMPING;
 			v.getVelocity().dy = (v.getVelocity().dy * TIMESTEP * netto_sum.dy) * DAMPING;
