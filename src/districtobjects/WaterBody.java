@@ -6,4 +6,8 @@ public class WaterBody extends Placeable {
 		super(x, y, width, height);
 	}
 	
+	public WaterBody clone() throws CloneNotSupportedException
+	{
+		return new WaterBody(getX(),getY(),getWidth(),getHeight());
+	}
 }

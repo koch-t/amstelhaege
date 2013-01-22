@@ -40,6 +40,18 @@ public class Groundplan {
 		nHouses = nrHouses;
 	}
 	
+	@SuppressWarnings("unchecked")
+	public Groundplan clone()
+	{
+		Groundplan cloneofplan = new Groundplan(nHouses);
+		cloneofplan.nCottages=nCottages;
+		cloneofplan.nBungalows=nBungalows;
+		cloneofplan.nMansions=nMansions;
+		cloneofplan.residences =(ArrayList<Residence>) residences.clone();
+		cloneofplan.waterBodies = (ArrayList<WaterBody>)waterBodies.clone();
+		return cloneofplan;
+	}
+	
 	public void addResidence(Residence residence){
 		if(residence.getType().equals("Cottage")){
 			nCottages++;
@@ -167,6 +179,9 @@ public class Groundplan {
 	public double getPlanValue(){
 		double value = 0;
 		for(Residence residence : residences){
+			if(isCorrectlyPlaced(residence)){   
+				value += getResidenceValue(residence);
+			}
 			value += getResidenceValue(residence);
 		}
 		return value;
@@ -175,6 +190,9 @@ public class Groundplan {
 	public double getPlanCummulativeDistance(){
 		double value = 0;
 		for(Residence residence : residences){
+			if(isCorrectlyPlaced(residence)){
+			value += getValueDistance(residence);
+			}
 			value += getValueDistance(residence);
 		}
 		return value;

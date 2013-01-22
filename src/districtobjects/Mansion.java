@@ -22,4 +22,9 @@ public class Mansion extends Residence {
 	public String getType() {
 		return "Mansion";
 	}
+	
+	public Mansion clone() throws CloneNotSupportedException
+	{
+		return new Mansion(getX(),getY());
+	}
 }
