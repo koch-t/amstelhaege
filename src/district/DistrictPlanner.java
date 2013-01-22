@@ -25,8 +25,9 @@ public class DistrictPlanner {
 		random = new Random(1);
 		frame = new GroundplanFrame();
 		Groundplan plan = planWijk();
+		Groundplan copyofplan = plan.clone();
 
-		frame.setPlan(plan);
+		frame.setPlan(copyofplan);
 	}
 
 	/**

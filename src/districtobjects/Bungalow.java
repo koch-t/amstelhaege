@@ -23,5 +23,10 @@ public class Bungalow extends Residence {
 	public String getType() {
 		return "Bungalow";
 	}
+	
+	public Bungalow clone() throws CloneNotSupportedException
+	{
+		return new Bungalow(getX(),getY());
+	}
 
 }

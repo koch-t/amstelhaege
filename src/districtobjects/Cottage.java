@@ -23,4 +23,9 @@ public class Cottage extends Residence {
 	public String getType() {
 		return "Cottage";
 	}
+	
+	public Cottage clone() throws CloneNotSupportedException
+	{
+		return new Cottage(getX(),getY());
+	}
 }
