@@ -15,19 +15,12 @@ public class Vertex implements Cloneable{
     private Tuple velocity;
     private double mass;
     private Vertex toVertex;
-    
-    public class Position{
-    	public double x,y;
-    	public Position(double x, double y){
-    		this.x = x;
-    		this.y = y;
-    	}
-     }
+    private double distance;
     
     @Override
     public Vertex clone(){
     	Vertex clone = new Vertex(this.p,isfixed);
-    	clone.velocity = velocity;
+    	clone.velocity = (Tuple) velocity.clone();
     	return clone;
     }
     
@@ -54,7 +47,7 @@ public class Vertex implements Cloneable{
     /**
      * Set the nearest neighbour relation (directed)
      */
-    public void setToVertex(Vertex toVertex){
+    public void setToVertex(Vertex toVertex, double distance){
     	this.toVertex = toVertex;
     }
     
@@ -81,10 +74,10 @@ public class Vertex implements Cloneable{
 	 * TODO Or set position of wall? When calculating distance important to consider width and length
 	 */
 	
-	public Position getPosition(){
+	public Tuple getPosition(){
 		if (isfixed)
 			return null;
-		return new Position(p.getX(),p.getY());
+		return new Tuple(p.getX(),p.getY());
 	}
 	
 	public Placeable getPlaceable(){
@@ -97,5 +90,13 @@ public class Vertex implements Cloneable{
 
 	public void setMass(double mass) {
 		this.mass = mass;
+	}
+
+	public double getDistance() {
+		return distance;
+	}
+
+	public void setDistance(double distance) {
+		this.distance = distance;
 	}
 }

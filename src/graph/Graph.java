@@ -48,7 +48,7 @@ public class Graph{
 					distance = curdist;
 				}
 			}
-			v1.setToVertex(nearest);
+			v1.setToVertex(nearest,distance);
 		}
 		return vertices;
 	}
