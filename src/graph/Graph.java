@@ -7,7 +7,7 @@ import districtobjects.Ground;
 import districtobjects.Residence;
 import districtobjects.WaterBody;
 
-public class Graph implements Cloneable{
+public class Graph{
 	
 	private Groundplan plan;
 	private ArrayList<Vertex> vertices;
@@ -48,7 +48,7 @@ public class Graph implements Cloneable{
 					distance = curdist;
 				}
 			}
-			v1.setToVertex(nearest);
+			v1.setToVertex(nearest,distance);
 		}
 		return vertices;
 	}
@@ -72,11 +72,6 @@ public class Graph implements Cloneable{
 		this.vertices = vertices;
 	}
 	
-	public Groundplan getGroundplan()
-	{
-		return plan;
-	}
-	
 	public Graph clone()
 	{
 		ArrayList<Vertex> clonelist = new ArrayList<Vertex>();
@@ -93,14 +88,21 @@ public class Graph implements Cloneable{
 		changeVertexCloneState(clone,false);
 		return clone;
 	}
+	
 
-	private void changeVertexCloneState(Graph clone, boolean state) {
-		for(Vertex v: vertices)
-			v.iscloned=state;
+	
+	private void changeVertexCloneState(Graph clone, boolean b) {
+		for(Vertex v:vertices)
+			v.iscloned=false;
 		for(Vertex v:clone.vertices)
-			v.iscloned=state;
+			v.iscloned=false;
 	}
 
+	public Groundplan getGroundplan()
+	{
+		return plan;
+	}
+	
 	private void cloneV(ArrayList<Vertex> clonelist, Vertex v) {
 		Vertex cloneofv;
 		
@@ -113,6 +115,5 @@ public class Graph implements Cloneable{
 		}
 			
 	}
-	
-	
 }
+
