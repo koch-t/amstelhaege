@@ -28,8 +28,12 @@ public class DistrictPlanner {
 		random = new Random(1);
 		frame = new GroundplanFrame();
 		algorithm = new SimulatedAnnealing(randomPlan());
-		Groundplan plan = planWijk();
-		frame.setPlan(plan);
+		while(true)
+		{
+			Groundplan plan = planWijk();
+			frame.setPlan(plan);
+			System.out.println("Value: "+plan.getPlanValue()+" Feasible:"+plan.isValid());
+		}
 	}
 
 	/**
@@ -37,8 +41,7 @@ public class DistrictPlanner {
 	 */
 	public Groundplan planWijk() {
 		// TODO: Implementeer je algoritme hier.
-		return randomPlan();
-		//return algorithm.getOptimalSolution(9999);
+		return algorithm.getOptimalSolution(999);
 	}
 
 	private Groundplan randomPlan() {
