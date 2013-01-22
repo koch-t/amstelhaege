@@ -10,24 +10,38 @@ import districtobjects.Placeable;
  */
 
 public class Vertex implements Cloneable{
+	//private vars:
     private Placeable p;
     private boolean isfixed;
     private Tuple velocity;
     private double mass;
     private Vertex toVertex;
+    private Vertex clone; //A Clone of this object
+    
+    //public vars:
+    public boolean iscloned;
     
     public class Position{
     	public double x,y;
     	public Position(double x, double y){
     		this.x = x;
     		this.y = y;
+    		iscloned=false;
     	}
      }
     
     @Override
     public Vertex clone(){
     	Vertex clone = new Vertex(this.p,isfixed);
-    	clone.velocity = velocity;
+    	clone.velocity = velocity.clone();
+    	iscloned=true;
+    	this.clone =clone; 
+    	if(toVertex!=null)
+    	{
+	    	if(!toVertex.iscloned)
+	    		clone.toVertex=toVertex.clone(); //Going into recursion
+	    	else clone.toVertex=toVertex.clone;
+    	}
     	return clone;
     }
     
@@ -38,6 +52,7 @@ public class Vertex implements Cloneable{
     public Vertex(Placeable p, boolean isfixed){
     	this.p = p;
     	this.isfixed = isfixed;
+    	velocity = new Tuple(0,0);
     }
     
     public Vertex(boolean isfixed){

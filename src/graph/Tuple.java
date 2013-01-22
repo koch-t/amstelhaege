@@ -1,6 +1,7 @@
 package graph;
 public class Tuple implements Cloneable{
 	public double dx,dy;
+	
 	public Tuple (double dx, double dy){
 		this.dx = dx;
 		this.dy = dy;
@@ -23,5 +24,10 @@ public class Tuple implements Cloneable{
 	
 	public static Tuple hooke_attraction(Vertex v1, Vertex v2){
 		return new Tuple();
+	}
+	
+	public Tuple clone()
+	{
+		return new Tuple(dx,dy);
 	}
 }
