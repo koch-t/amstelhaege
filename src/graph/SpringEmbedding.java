@@ -31,8 +31,8 @@ public class SpringEmbedding {
 			v.getVelocity().dx = (v.getVelocity().dx * TIMESTEP * netto_sum.dx) * DAMPING;
 			v.getVelocity().dy = (v.getVelocity().dy * TIMESTEP * netto_sum.dy) * DAMPING;
 			//v.position := v.position + timestep * this_node.velocity
-			v.getPosition().x += v.getPosition().x + (TIMESTEP * v.getVelocity().dx);
-			v.getPosition().y += v.getPosition().y + (TIMESTEP * v.getVelocity().dy);
+			v.getPosition().dx += v.getPosition().dx + (TIMESTEP * v.getVelocity().dx);
+			v.getPosition().dy += v.getPosition().dy + (TIMESTEP * v.getVelocity().dy);
 			//total_kinetic_energy := total_kinetic_energy + this_node.mass * (this_node.velocity)^2
 			total_kinetic_energy.dx =  total_kinetic_energy.dx + (v.getMass() * Math.sqrt(v.getVelocity().dx));
 			total_kinetic_energy.dy =  total_kinetic_energy.dy+ (v.getMass() * Math.sqrt(v.getVelocity().dy));
