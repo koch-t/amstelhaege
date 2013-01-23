@@ -1,5 +1,9 @@
 package graph;
 public class Tuple implements Cloneable{
+
+	public double coulombFactor = 1e-7;
+	public double hookeFactor = 1;
+
 	public double dx,dy;
 	public Tuple (double dx, double dy){
 		this.dx = dx;
@@ -12,42 +16,28 @@ public class Tuple implements Cloneable{
 		this.dx += other.dx;
 		this.dy += other.dy;
 	}
-	
+
 	public void multiply(double factor){
 		this.dx *= factor;
 		this.dy *= factor;
 	}
-	
+
 	public Tuple subtract(Tuple a, Tuple b){
 		Tuple tuple = new Tuple();
 		tuple.dx = a.dx - b.dx;
 		tuple.dy = a.dy - b.dy;
 		return tuple;
 	}	
-	
-	/*
-	 * Coulomb's law, force of attraction/repulsion
-     * F = Q₁Q₂/(4πε₀r²)
-     * where ε₀ = 8.8542e-12 F/m = permittivity of space (Farad/meter)
-     * Q₁ and Q₂ are the charges in coulombs
-     * r is separation in meters
-     * 1 electron charge = 1.602e-19 C
-	 */
-	public static Tuple coulomb_repulsion(Vertex v1, Vertex v2){
-		Tuple result = new Tuple();
-		double q1 = v1.getPlaceable() == null ? 0 : v1.getPlaceable().getHeight() * v1.getPlaceable().getWidth() * 1.602e-19;
-		double q2 = v1.getPlaceable() == null ? 0 : v1.getPlaceable().getHeight() * v1.getPlaceable().getWidth() * 1.602e-19;
-        double distance = 0;
-        double permittivityspace = 8.854E-12;
-		result.dx = (q1*q2) / (4*Math.PI*permittivityspace*Math.sqrt(distance));
-		result.dy = (q1*q2) / (4*Math.PI*permittivityspace*Math.sqrt(distance));
-		return result;
+
+
+	public Tuple coulombRepulsion(Vertex pThis, Vertex pOther,double distance) {
+		double s = 1.0 / Math.pow(distance,3);
+		return new Tuple((pOther.getPosition().dx - pThis.getPosition().dx) / s * coulombFactor, (pOther.getPosition().dy - pThis.getPosition().dy) / s * coulombFactor);
 	}
-	
-	public static Tuple hooke_attraction(Vertex v1, Vertex v2){ // On node01 on node2
-		return new Tuple();
+
+	public Tuple hookeAttraction(Vertex pThis, Vertex pOther) {
+		return new Tuple((pOther.getPosition().dx - pThis.getPosition().dx) * (-hookeFactor), (pOther.getPosition().dy - pThis.getPosition().dy) * (-hookeFactor));
 	}
-	
 	public Tuple clone(){
 		return new Tuple(this.dx,this.dy);
 	}
