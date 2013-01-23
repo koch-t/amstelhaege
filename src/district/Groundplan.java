@@ -80,12 +80,14 @@ public class Groundplan {
 			|| ((double) nCottages / nHouses) < MINIMUM_COTTAGE_PERCENTAGE
 			|| ((double) nBungalows / nHouses) < MINIMUM_BUNGALOW_PERCENTAGE
 			|| ((double) nMansions / nHouses) < MINIMUM_MANSION_PERCENTAGE){
+			System.out.println("Something below mininum percentage");
 			return false;
 		}else{
 			double waterSurfaceArea = 0;
 			// Check water body placement
 			for(WaterBody waterBody : waterBodies){
 				if(!isCorrectlyPlaced(waterBody)){
+					System.out.println("Invalid water body placement");
 					return false;
 				}else{
 					waterSurfaceArea += waterBody.getWidth() * waterBody.getHeight();
@@ -94,12 +96,14 @@ public class Groundplan {
 			// Check water percentage
 			double groundSurfaceArea = WIDTH * HEIGHT;
 			if((double) waterSurfaceArea / groundSurfaceArea < MINIMUM_WATER_PERCENTAGE){
+				System.out.println("Not enough water");
 				return false;
 			}
 			
 			// Check residence placement
 			for(Residence residence : residences){
 				if(!isCorrectlyPlaced(residence)){
+					System.out.println("Residence placement faulty");
 					return false;
 				}
 			}
