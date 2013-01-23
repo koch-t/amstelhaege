@@ -6,6 +6,8 @@ import graph.Vertex;
 
 import java.util.ArrayList;
 
+import district.Groundplan;
+
 public class SpringEmbedding {
 
 	public final double DAMPING = 0.005;
@@ -71,13 +73,12 @@ public class SpringEmbedding {
 	private void bounce(Vertex v) {
 		if(v.getPlaceable().getX()<0)
 			v.getPlaceable().setX(10);
-		if(v.getPlaceable().getX()>120)
-			v.getPlaceable().setX(110);
+		if(v.getPlaceable().getX()+v.getPlaceable().getHeight()>Groundplan.HEIGHT)
+			v.getPlaceable().setX(100);
 		if(v.getPlaceable().getY()<0)
 			v.getPlaceable().setY(10);
-		if(v.getPlaceable().getY()>160)
-			v.getPlaceable().setY(150);
-		
+		if(v.getPlaceable().getY()+v.getPlaceable().getWidth()>Groundplan.WIDTH)
+			v.getPlaceable().setY(140);
 	}
 
 	private void getWallPosition(Graph g, Vertex v, Vertex v_other) {
