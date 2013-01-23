@@ -26,12 +26,12 @@ public class Groundplan {
 	public static final double	MINIMUM_COTTAGE_PERCENTAGE 	= 0.60;
 	public static final double	MINIMUM_BUNGALOW_PERCENTAGE = 0.25;
 	public static final double	MINIMUM_MANSION_PERCENTAGE	= 0.15;
-	
+
 	private ArrayList<Residence> residences;
 	private ArrayList<WaterBody> waterBodies;
 	private Ground ground;
 	private int nCottages, nBungalows, nMansions, nHouses;
-	
+
 	public Groundplan(int nrHouses){
 		residences = new ArrayList<Residence>();
 		waterBodies = new ArrayList<WaterBody>();
@@ -39,7 +39,7 @@ public class Groundplan {
 		nCottages = nBungalows = nMansions = 0;
 		nHouses = nrHouses;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public Groundplan clone()
 	{
@@ -51,7 +51,7 @@ public class Groundplan {
 		cloneofplan.waterBodies = (ArrayList<WaterBody>)waterBodies.clone();
 		return cloneofplan;
 	}
-	
+
 	public void addResidence(Residence residence){
 		if(residence.getType().equals("Cottage")){
 			nCottages++;
@@ -62,11 +62,11 @@ public class Groundplan {
 		}
 		residences.add(residence);
 	}
-	
+
 	public void addWaterBody(WaterBody waterBody){
 		waterBodies.add(waterBody);
 	}
-	
+
 	/**
 	 * Checks whether the ground plan is valid.
 	 * Watch out! Expensive operation!
@@ -77,9 +77,9 @@ public class Groundplan {
 	public boolean isValid(){
 		// Check constraints
 		if( waterBodies.size() > MAXIMUM_WATER_BODIES
-			|| ((double) nCottages / nHouses) < MINIMUM_COTTAGE_PERCENTAGE
-			|| ((double) nBungalows / nHouses) < MINIMUM_BUNGALOW_PERCENTAGE
-			|| ((double) nMansions / nHouses) < MINIMUM_MANSION_PERCENTAGE){
+				|| ((double) nCottages / nHouses) < MINIMUM_COTTAGE_PERCENTAGE
+				|| ((double) nBungalows / nHouses) < MINIMUM_BUNGALOW_PERCENTAGE
+				|| ((double) nMansions / nHouses) < MINIMUM_MANSION_PERCENTAGE){
 			System.out.println("Something below mininum percentage");
 			return false;
 		}else{
@@ -99,7 +99,7 @@ public class Groundplan {
 				System.out.println("Not enough water");
 				return false;
 			}
-			
+
 			// Check residence placement
 			for(Residence residence : residences){
 				if(!isCorrectlyPlaced(residence)){
@@ -110,76 +110,81 @@ public class Groundplan {
 		}
 		return true;
 	}
-	
+
 	public boolean isCorrectlyPlaced(Placeable placeable){
 		// Check for rectangle overlap. Visualization helper: http://silentmatt.com/rectangle-intersection/
 		if(placeable.rightEdge() > ground.rightEdge()
-			|| placeable.leftEdge() < ground.leftEdge()
-			|| placeable.topEdge() < ground.topEdge()
-			|| placeable.bottomEdge() > ground.bottomEdge()){
+				|| placeable.leftEdge() < ground.leftEdge()
+				|| placeable.topEdge() < ground.topEdge()
+				|| placeable.bottomEdge() > ground.bottomEdge()){
 			// Residence is not fully intersecting the ground
+			System.out.println("Placeable outside ground");
 			return false;
 		}
-		
+
 		// Check distance to edges
 		if(placeable instanceof Residence){
 			if(placeable.leftEdge() < ((Residence) placeable).getMinimumDistance()
-				|| placeable.rightEdge() > ground.rightEdge() - ((Residence) placeable).getMinimumDistance()
-				|| placeable.topEdge() < ((Residence) placeable).getMinimumDistance()
-				|| placeable.bottomEdge() > ground.bottomEdge() - ((Residence) placeable).getMinimumDistance()){
+					|| placeable.rightEdge() > ground.rightEdge() - ((Residence) placeable).getMinimumDistance()
+					|| placeable.topEdge() < ((Residence) placeable).getMinimumDistance()
+					|| placeable.bottomEdge() > ground.bottomEdge() - ((Residence) placeable).getMinimumDistance()){
+				System.out.println("Placeable to close");
 				return false;
 			}
 		}
-		
+
 		for(WaterBody waterBody : waterBodies){
 			if(placeable != waterBody
-				&& placeable.leftEdge() < waterBody.rightEdge()
-				&& placeable.rightEdge() > waterBody.leftEdge()
-				&& placeable.topEdge() < waterBody.bottomEdge()
-				&& placeable.bottomEdge() > waterBody.topEdge()){
+					&& placeable.leftEdge() < waterBody.rightEdge()
+					&& placeable.rightEdge() > waterBody.leftEdge()
+					&& placeable.topEdge() < waterBody.bottomEdge()
+					&& placeable.bottomEdge() > waterBody.topEdge()){
 				// intersecting
+				System.out.println("Intersecting with water");
 				return false;
 			}
 		}
-		
+
 		for(Residence other : residences){
 			if(placeable != other
-				&& placeable.leftEdge() < other.rightEdge()
-				&& placeable.rightEdge() > other.leftEdge()
-				&& placeable.topEdge() < other.bottomEdge()
-				&& placeable.bottomEdge() > other.topEdge()){
+					&& placeable.leftEdge() < other.rightEdge()
+					&& placeable.rightEdge() > other.leftEdge()
+					&& placeable.topEdge() < other.bottomEdge()
+					&& placeable.bottomEdge() > other.topEdge()){
 				// intersecting
+				System.out.println("Intersecting with other placeables");
 				return false;
 			}else if(placeable instanceof Residence
 					&& placeable != other
 					&& getDistance((Residence) placeable, other) < ((Residence) placeable).getMinimumDistance()){
-					// check distance
-					return false;
+				// check distance
+				System.out.println("Residence below minimum distance");
+				return false;
 			}
 		}
 		return true;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public ArrayList<Residence> getResidences(){
 		return (ArrayList<Residence>) residences.clone();
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public ArrayList<WaterBody> getWaterBodies(){
 		return (ArrayList<WaterBody>) waterBodies.clone();
 	}
-	
+
 	public double getResidenceValue(Residence residence){
 		double value = residence.getValue();
 		double distance = getValueDistance(residence);
 		double valueIncrease = residence.getAddedValuePercentage() * value;
-		
+
 		value += (Math.max((int)distance - residence.getMinimumDistance(),0)) * valueIncrease;
-		
+
 		return value;
 	}
-	
+
 	public double getPlanValue(){
 		double value = 0;
 		for(Residence residence : residences){
@@ -190,21 +195,21 @@ public class Groundplan {
 		}
 		return value;
 	}
-	
+
 	public double getPlanCummulativeDistance(){
 		double value = 0;
 		for(Residence residence : residences){
 			if(isCorrectlyPlaced(residence)){
-			value += getValueDistance(residence);
+				value += getValueDistance(residence);
 			}
 			value += getValueDistance(residence);
 		}
 		return value;
 	}
-	
+
 	public double getValueDistance(Residence residence){
 		double minimum = residence.leftEdge();
-		
+
 		if(residence.topEdge() < minimum){
 			minimum = residence.topEdge();
 		}
@@ -214,7 +219,7 @@ public class Groundplan {
 		if(ground.bottomEdge() - residence.bottomEdge() < minimum){
 			minimum = ground.bottomEdge() - residence.bottomEdge();
 		}
-		
+
 		for(Residence other : residences){
 			if(residence != other){
 				double d = getDistance(residence, other);
@@ -223,17 +228,17 @@ public class Groundplan {
 				}
 			}
 		}
-		
+
 		return minimum;
 	}
-	
+
 	public double getDistance(Residence residence, Residence other){
 		double distance = 0;
 		if(residence != other){
 			if(residence.leftEdge() <= other.rightEdge()
-				&& residence.rightEdge() >= other.leftEdge()
-				&& residence.topEdge() <= other.bottomEdge()
-				&& residence.bottomEdge() >= other.topEdge()){
+					&& residence.rightEdge() >= other.leftEdge()
+					&& residence.topEdge() <= other.bottomEdge()
+					&& residence.bottomEdge() >= other.topEdge()){
 				// Houses are intersecting, distance is 0.
 				return 0;
 			}else if(residence.leftEdge() < other.rightEdge()
@@ -278,7 +283,7 @@ public class Groundplan {
 		}
 		return distance;
 	}
-	
+
 	public Ground getGround(){
 		return ground;
 	}
