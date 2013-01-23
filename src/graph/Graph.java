@@ -30,8 +30,21 @@ public class Graph{
 		return distance;
 	}
 	
-	public double distanceBetween(Vertex v1, Vertex v2){
+	public static double distanceBetween(Vertex v1, Vertex v2){
 		return v1.getPlaceable().getDistance(v2.getPlaceable());
+	}
+	
+	public Tuple wallPosition(Vertex v) throws Exception
+	{
+		if(distanceToWall(v)+v.getPlaceable().getX()==120)
+			return new Tuple(120,v.getPlaceable().getY());
+		else if(v.getPlaceable().getX()-distanceToWall(v)==0)
+			return new Tuple(0,v.getPlaceable().getY());
+		else if(v.getPlaceable().getY()+distanceToWall(v)==160)
+			return new Tuple(v.getPlaceable().getX(),160);
+		else if(v.getPlaceable().getY()-distanceToWall(v)==0)
+			return new Tuple(v.getPlaceable().getX(),160);
+		throw new Exception("Combination of vertex position and distance to wall does not hit the wall");
 	}
 	
 	public ArrayList<Vertex> setNearestNeighbours(){

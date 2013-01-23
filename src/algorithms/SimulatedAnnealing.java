@@ -38,7 +38,7 @@ public class SimulatedAnnealing {
 		
 		for(int i=0;i<=maxiter;i++)
 		{
-			springembedding.springEmbed(currentplan.getVertices());
+			springembedding.springEmbed(currentplan);
 			
 			//bereken startCurrentValue en startNextValue (deze zijn nodig voor berekenen T)
 			currentvalue=currentplan.getGroundplan().getPlanValue();

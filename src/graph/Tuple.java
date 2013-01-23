@@ -1,8 +1,6 @@
 package graph;
 public class Tuple implements Cloneable{
 
-	public double coulombFactor = 1e-7;
-	public double hookeFactor = 1;
 
 	public double dx,dy;
 	public Tuple (double dx, double dy){
@@ -29,12 +27,14 @@ public class Tuple implements Cloneable{
 		return tuple;
 	}	
 
-	public Tuple coulombRepulsion(Vertex pThis, Vertex pOther,double distance) {
+	public static Tuple coulombRepulsion(Vertex pThis, Vertex pOther,double distance) {
+		final double coulombFactor = 1e-7;
 		double s = 1.0 / Math.pow(distance,3);
 		return new Tuple((pOther.getPosition().dx - pThis.getPosition().dx) / s * coulombFactor, (pOther.getPosition().dy - pThis.getPosition().dy) / s * coulombFactor);
+	}
 
-
-	public Tuple hookeAttraction(Vertex pThis, Vertex pOther) {
+	public static Tuple hookeAttraction(Vertex pThis, Vertex pOther) {
+		final double hookeFactor=1;
 		return new Tuple((pOther.getPosition().dx - pThis.getPosition().dx) * (-hookeFactor), (pOther.getPosition().dy - pThis.getPosition().dy) * (-hookeFactor));
 	}
 	public Tuple clone(){

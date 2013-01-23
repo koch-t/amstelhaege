@@ -11,14 +11,15 @@ import districtobjects.Placeable;
 
 public class Vertex implements Cloneable{
     private Placeable p;
-    private boolean isfixed;
     private Tuple velocity;
+    private Tuple position;
     private double mass;
     private Vertex clone; //A Clone of this object
     private Vertex toVertex;
     private double distance;
     
     public boolean iscloned;
+    public boolean isfixed;
         
     @Override
     public Vertex clone(){
@@ -43,6 +44,7 @@ public class Vertex implements Cloneable{
     	this.p = p;
     	this.isfixed = isfixed;
     	velocity = new Tuple(0,0);
+    	
     }
     
     public Vertex(boolean isfixed){
@@ -88,10 +90,19 @@ public class Vertex implements Cloneable{
 	
 	public Tuple getPosition(){
 		if (isfixed)
-			return null;
+			return position;
 		return new Tuple(p.getX(),p.getY());
 	}
 	
+	public void setPosition(Tuple position){
+	if(isfixed)
+		this.position = position;
+	else
+	{
+		p.setX(position.dx);
+		p.setY(position.dy);
+	}
+	}
 	public Placeable getPlaceable(){
 		return this.p;
 	}
