@@ -47,7 +47,7 @@ public class DistrictPlanner {
 	private Groundplan randomPlan() {
 		Groundplan plan = new Groundplan(20);
 		
-		for (int i = 0; i < Groundplan.MINIMUM_COTTAGE_PERCENTAGE * 20 -2; i++) {
+		for (int i = 0; i < Groundplan.MINIMUM_COTTAGE_PERCENTAGE * 20; i++) {
 			plan.addResidence(new Cottage(random.nextDouble()
 					* Groundplan.WIDTH, random.nextDouble() * Groundplan.HEIGHT));
 		}
