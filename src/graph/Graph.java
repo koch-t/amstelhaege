@@ -15,6 +15,7 @@ public class Graph{
 	public Graph(Groundplan plan){
 		this.plan = plan;
 		this.vertices = buildGraph(plan);
+		setNearestNeighbours();
 	}
 	
 	public double distanceToWall(Vertex v){

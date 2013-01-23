@@ -25,8 +25,7 @@ public class SpringEmbedding {
 			for (Vertex v_other : vertices){
 				if (v_other == v)
 					continue;
-				if(v.isfixed)
-					getWallPosition(g, v, v_other);
+				getWallPosition(g, v, v_other);
 				netto_sum.sum(Tuple.coulombRepulsion(v,v_other, Graph.distanceBetween(v, v_other)));
 			}
 			/*
@@ -34,8 +33,8 @@ public class SpringEmbedding {
 			 *   net-force := net-force + Hooke_attraction( this_node, spring )
 			 *   next spring
 			 */
-			if(!v.isfixed)
-				netto_sum.sum((Tuple.hookeAttraction(v,v.getToVertex())));
+			getWallPosition(g,v.getToVertex(),v);
+			netto_sum.sum((Tuple.hookeAttraction(v,v.getToVertex())));
 			//v.velocity := (v.velocity + timestep * net-force) * damping
 			v.getVelocity().dx = (v.getVelocity().dx * TIMESTEP * netto_sum.dx) * DAMPING;
 			v.getVelocity().dy = (v.getVelocity().dy * TIMESTEP * netto_sum.dy) * DAMPING;
@@ -50,7 +49,10 @@ public class SpringEmbedding {
 
 	private void getWallPosition(Graph g, Vertex v, Vertex v_other) {
 		try {
-			v.setPosition(g.wallPosition(v_other));
+			if(v.isfixed)
+				v.setPosition(g.wallPosition(v_other));
+			if(v_other.isfixed)
+				v_other.setPosition(g.wallPosition(v));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
