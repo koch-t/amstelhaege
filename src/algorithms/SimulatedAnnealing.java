@@ -44,6 +44,7 @@ public class SimulatedAnnealing {
 			currentvalue=currentplan.getGroundplan().getPlanValue();
 			nextvalue=nextplan.getGroundplan().getPlanValue();
 			
+			if(i==0) setT(currentvalue,nextvalue);
 			if(currentvalue<nextvalue){
 				cloneGroundPlans(nextvalue);
 			}
@@ -52,7 +53,6 @@ public class SimulatedAnnealing {
 				if(determineAcception(currentvalue, nextvalue))
 					cloneGroundPlans(nextvalue);
 			}
-			if(i==0) setT(currentvalue,nextvalue);
 		}
 		return optimalplan.getGroundplan();
 	}
