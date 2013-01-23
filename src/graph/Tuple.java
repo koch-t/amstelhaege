@@ -40,5 +40,13 @@ public class Tuple implements Cloneable{
 	public Tuple clone(){
 		return new Tuple(this.dx,this.dy);
 	}
+	
+	public boolean equals(Tuple t)
+	{
+		//Lazy equals
+		if(this.dx==t.dx && this.dy==t.dy)
+			return true;
+		return false;
+	}
 
 }

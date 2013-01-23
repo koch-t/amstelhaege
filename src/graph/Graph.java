@@ -31,7 +31,12 @@ public class Graph{
 		return distance;
 	}
 	
-	public static double distanceBetween(Vertex v1, Vertex v2){
+	public double distanceBetween(Vertex v1, Vertex v2){
+		if(v1.isfixed)
+			return distanceToWall(v2);
+		if(v2.isfixed)
+			return distanceToWall(v1);
+		
 		return v1.getPlaceable().getDistance(v2.getPlaceable());
 	}
 	
@@ -127,6 +132,8 @@ public class Graph{
 			if(cloneofv.getToVertex()!=null)
 				cloneofv=cloneofv.getToVertex();
 		}
+		if(cloneofv.isfixed)
+			clonelist.remove(cloneofv);
 			
 	}
 }

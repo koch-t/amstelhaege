@@ -1,8 +1,10 @@
 package algorithms;
 
 import district.*;
+import districtobjects.Residence;
 import graph.Graph;
 import graph.Tuple;
+import graph.Vertex;
 
 import java.util.Random;
 
@@ -38,11 +40,12 @@ public class SimulatedAnnealing {
 		
 		for(int i=0;i<=maxiter;i++)
 		{
+			currentvalue=currentplan.getGroundplan().getPlanValue();
 			springembedding.springEmbed(currentplan);
 			
 			//bereken startCurrentValue en startNextValue (deze zijn nodig voor berekenen T)
-			currentvalue=currentplan.getGroundplan().getPlanValue();
-			nextvalue=nextplan.getGroundplan().getPlanValue();
+			
+			nextvalue=nextplan.getGroundplan().getPlanValue()-getPenalty();
 			
 			if(i==0) setT(currentvalue,nextvalue);
 			if(currentvalue<nextvalue){
@@ -59,6 +62,19 @@ public class SimulatedAnnealing {
 		
 	
 	
+	private double getPenalty() {
+		double penalty=0;
+		
+		if(nextplan.getGroundplan().isValid())
+			return penalty;
+		for(Vertex v:nextplan.getVertices())
+		{
+			if(!nextplan.getGroundplan().isCorrectlyPlaced(v.getPlaceable()))
+				penalty+=1000000;
+		}
+		return penalty;
+	}
+
 	private void setT(double currentvalue, double nextvalue) {
 		startTValues = new Pair<Double,Double>(currentvalue,nextvalue);
 	}
