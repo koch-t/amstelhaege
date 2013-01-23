@@ -29,11 +29,10 @@ public class Tuple implements Cloneable{
 		return tuple;
 	}	
 
-
 	public Tuple coulombRepulsion(Vertex pThis, Vertex pOther,double distance) {
 		double s = 1.0 / Math.pow(distance,3);
 		return new Tuple((pOther.getPosition().dx - pThis.getPosition().dx) / s * coulombFactor, (pOther.getPosition().dy - pThis.getPosition().dy) / s * coulombFactor);
-	}
+
 
 	public Tuple hookeAttraction(Vertex pThis, Vertex pOther) {
 		return new Tuple((pOther.getPosition().dx - pThis.getPosition().dx) * (-hookeFactor), (pOther.getPosition().dy - pThis.getPosition().dy) * (-hookeFactor));
@@ -41,4 +40,5 @@ public class Tuple implements Cloneable{
 	public Tuple clone(){
 		return new Tuple(this.dx,this.dy);
 	}
+
 }

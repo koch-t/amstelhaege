@@ -1,6 +1,8 @@
 package district;
 import java.util.Random;
 
+import algorithms.SimulatedAnnealing;
+
 
 import districtobjects.Bungalow;
 import districtobjects.Cottage;
@@ -19,15 +21,19 @@ import districtobjects.WaterBody;
 public class DistrictPlanner {
 	Random random;
 	GroundplanFrame frame;
+	SimulatedAnnealing algorithm;
 	private static final int SCALE = 1;
 
 	public DistrictPlanner() {
 		random = new Random(1);
 		frame = new GroundplanFrame();
-		Groundplan plan = planWijk();
-		Groundplan copyofplan = plan.clone();
-
-		frame.setPlan(copyofplan);
+		algorithm = new SimulatedAnnealing(randomPlan());
+		while(true)
+		{
+			Groundplan plan = planWijk();
+			frame.setPlan(plan);
+			System.out.println("Value: "+plan.getPlanValue()+" Feasible:"+plan.isValid());
+		}
 	}
 
 	/**
@@ -35,7 +41,7 @@ public class DistrictPlanner {
 	 */
 	public Groundplan planWijk() {
 		// TODO: Implementeer je algoritme hier.
-		return randomPlan();
+		return algorithm.getOptimalSolution(999);
 	}
 
 	private Groundplan randomPlan() {

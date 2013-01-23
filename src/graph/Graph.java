@@ -71,4 +71,49 @@ public class Graph{
 	public void setVertices(ArrayList<Vertex> vertices) {
 		this.vertices = vertices;
 	}
+	
+	public Graph clone()
+	{
+		ArrayList<Vertex> clonelist = new ArrayList<Vertex>();
+		
+		Graph clone = new Graph(plan.clone());
+		for(Vertex v:vertices)
+		{
+			if(!v.iscloned)
+			{
+				cloneV(clonelist, v);
+			}
+		}
+		clone.vertices=clonelist;
+		changeVertexCloneState(clone,false);
+		return clone;
+	}
+	
+
+	
+	private void changeVertexCloneState(Graph clone, boolean b) {
+		for(Vertex v:vertices)
+			v.iscloned=false;
+		for(Vertex v:clone.vertices)
+			v.iscloned=false;
+	}
+
+	public Groundplan getGroundplan()
+	{
+		return plan;
+	}
+	
+	private void cloneV(ArrayList<Vertex> clonelist, Vertex v) {
+		Vertex cloneofv;
+		
+		cloneofv=v.clone();
+		while(!clonelist.contains(cloneofv))
+		{
+			clonelist.add(cloneofv);
+			if(cloneofv.getToVertex()!=null)
+				cloneofv=cloneofv.getToVertex();
+		}
+			
+	}
 }
+

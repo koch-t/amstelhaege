@@ -14,13 +14,24 @@ public class Vertex implements Cloneable{
     private boolean isfixed;
     private Tuple velocity;
     private double mass;
+    private Vertex clone; //A Clone of this object
     private Vertex toVertex;
     private double distance;
     
+    public boolean iscloned;
+        
     @Override
     public Vertex clone(){
     	Vertex clone = new Vertex(this.p,isfixed);
-    	clone.velocity = (Tuple) velocity.clone();
+    	clone.velocity = velocity.clone();
+    	iscloned=true;
+    	this.clone =clone; 
+    	if(toVertex!=null)
+    	{
+	    	if(!toVertex.iscloned)
+	    		clone.toVertex=toVertex.clone(); //Going into recursion
+	    	else clone.toVertex=toVertex.clone;
+    	}
     	return clone;
     }
     
@@ -31,6 +42,7 @@ public class Vertex implements Cloneable{
     public Vertex(Placeable p, boolean isfixed){
     	this.p = p;
     	this.isfixed = isfixed;
+    	velocity = new Tuple(0,0);
     }
     
     public Vertex(boolean isfixed){

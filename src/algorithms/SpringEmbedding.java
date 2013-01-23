@@ -1,4 +1,7 @@
-package graph;
+package algorithms;
+
+import graph.Tuple;
+import graph.Vertex;
 
 import java.util.ArrayList;
 
