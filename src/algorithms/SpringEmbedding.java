@@ -5,13 +5,24 @@ import graph.Tuple;
 import graph.Vertex;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import district.Groundplan;
+import districtobjects.Placeable;
+import districtobjects.Residence;
+import districtobjects.WaterBody;
 
 public class SpringEmbedding {
 
 	public final double DAMPING = 0.005;
 	public final double TIMESTEP = 1;
+	public int debugint=0;
+	Random random;
+	
+	public SpringEmbedding()
+	{
+		random = new Random(1);
+	}
 
 	public void springEmbed(Graph g){
 		
@@ -46,8 +57,8 @@ public class SpringEmbedding {
 			{
 				v.getPlaceable().setX(v.getPosition().dx + (TIMESTEP * v.getVelocity().dx));
 				v.getPlaceable().setY(v.getPosition().dy + (TIMESTEP * v.getVelocity().dy));
-				bounce(v);
 				removeStack(v, vertices);
+				bounce(v,g);
 			}
 			//total_kinetic_energy := total_kinetic_energy + this_node.mass * (this_node.velocity)^2
 			total_kinetic_energy.dx =  total_kinetic_energy.dx + (v.getMass() * Math.sqrt(v.getVelocity().dx));
@@ -56,29 +67,65 @@ public class SpringEmbedding {
 			vertices= g.setNearestNeighbours();
 		
 		}
+		debugint++;
+		
 	}
 
 	private void removeStack(Vertex v,ArrayList<Vertex> vertices) {
 		for(Vertex v2:vertices)
 		{
 			if(v==v2) continue;
-			if(v.getPosition().equals(v2.getPosition()));
-			{
-				v.getPosition().dx++;
-			}
+			if(v.getPosition().equals(v2.getPosition()))
+				v.setPosition(new Tuple(v.getPosition().dx+1,v.getPosition().dy));
 		}
 		
 	}
 
-	private void bounce(Vertex v) {
-		if(v.getPlaceable().getX()<0)
-			v.getPlaceable().setX(10);
-		if(v.getPlaceable().getX()+v.getPlaceable().getHeight()>Groundplan.HEIGHT)
-			v.getPlaceable().setX(100);
-		if(v.getPlaceable().getY()<0)
-			v.getPlaceable().setY(10);
-		if(v.getPlaceable().getY()+v.getPlaceable().getWidth()>Groundplan.WIDTH)
-			v.getPlaceable().setY(140);
+	private void bounce(Vertex v,Graph graph) {
+		bounceOutOfWater(v, graph);
+		bounceFromWall(v);
+	}
+
+	private void bounceOutOfWater(Vertex v, Graph graph) {
+		while(graph.getGroundplan().intersectsWithWater(v.getPlaceable()))
+		{
+			v.getPlaceable().setX(random.nextDouble()*Groundplan.WIDTH);
+			v.getPlaceable().setY(random.nextDouble()*Groundplan.HEIGHT);
+		}
+	}
+	
+	private void bounceFromWall(Vertex v) {
+		Placeable p = v.getPlaceable();
+		if(p instanceof Residence)
+		{
+			bounceResidenceFromWall(p);
+		}
+		else
+			bounceWaterFromWall(p);
+	}
+
+	private void bounceWaterFromWall(Placeable p) {
+		if(p.getX()<0)
+			p.setX(0);
+		if(p.getX()+p.getWidth()>Groundplan.WIDTH)
+			p.setX(Groundplan.WIDTH-p.getWidth());
+		if(p.getY()<0)
+			p.setY(0);
+		if(p.getY()+p.getHeight()>Groundplan.HEIGHT)
+			p.setY(Groundplan.HEIGHT-p.getHeight());
+	}
+
+	private void bounceResidenceFromWall(Placeable p) {
+		Residence r=(Residence)p;
+		
+		if(r.getX()-r.getMinimumDistance()<0)
+			r.setX(r.getMinimumDistance());
+		if(r.getX()+r.getWidth()+r.getMinimumDistance()>Groundplan.WIDTH)
+			r.setX(Groundplan.WIDTH-r.getMinimumDistance()-r.getWidth());
+		if(r.getY()-r.getMinimumDistance()<0)
+			r.setY(r.getMinimumDistance());
+		if(r.getY()+r.getHeight()+r.getMinimumDistance()>Groundplan.HEIGHT)
+			r.setY(Groundplan.HEIGHT-r.getMinimumDistance()-r.getHeight());
 	}
 
 	private void getWallPosition(Graph g, Vertex v, Vertex v_other) {

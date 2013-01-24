@@ -41,12 +41,13 @@ public class Tuple implements Cloneable{
 		return new Tuple(this.dx,this.dy);
 	}
 	
-	public boolean equals(Tuple t)
-	{
-		//Lazy equals
-		if(this.dx==t.dx && this.dy==t.dy)
-			return true;
-		return false;
+	@Override
+	public boolean equals(Object other){
+	    if (other == null) return false;
+	    if (other == this) return true;
+	    if (!(other instanceof Tuple))return false;
+	    
+	    Tuple otherTuple = (Tuple)other;
+	    return this.dx==otherTuple.dx && this.dy==otherTuple.dy;
 	}
-
 }

@@ -52,7 +52,7 @@ public class DistrictPlanner {
 					* Groundplan.WIDTH, random.nextDouble() * Groundplan.HEIGHT));
 		}
 
-		for (int i = 0; i < Groundplan.MINIMUM_BUNGALOW_PERCENTAGE * 20; i++) {
+		for (int i = 0; i < Groundplan.MINIMUM_BUNGALOW_PERCENTAGE *20 ; i++) {
 			plan.addResidence(new Bungalow(random.nextDouble()
 					* Groundplan.WIDTH, random.nextDouble() * Groundplan.HEIGHT));
 		}

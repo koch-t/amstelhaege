@@ -13,7 +13,7 @@ public class GroundplanCanvas extends Canvas {
 	 * 
 	 */
 	private static final long serialVersionUID = 2544621875608225004L;
-	private static final int MARGINLEFT = 50, MARGINTOP = 50;
+	private static final int MARGINLEFT = 2, MARGINTOP = 2;
 	private static final int SCALE = 6;
 	private Groundplan plan = null;
 	

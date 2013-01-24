@@ -164,6 +164,22 @@ public class Groundplan {
 		}
 		return true;
 	}
+	
+	public boolean intersectsWithWater(Placeable placeable)
+	{
+		for(WaterBody waterBody : waterBodies){
+			if(placeable != waterBody
+					&& placeable.leftEdge() < waterBody.rightEdge()
+					&& placeable.rightEdge() > waterBody.leftEdge()
+					&& placeable.topEdge() < waterBody.bottomEdge()
+					&& placeable.bottomEdge() > waterBody.topEdge()){
+				// intersecting
+				System.out.println("Intersecting with water");
+				return true;
+			}
+		}
+		return false;
+	}
 
 	@SuppressWarnings("unchecked")
 	public ArrayList<Residence> getResidences(){
