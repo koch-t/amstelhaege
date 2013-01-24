@@ -9,6 +9,7 @@ package districtobjects;
  *
  */
 public class Cottage extends Residence {
+	
 	Cottage(){
 		super(8.0, 8.0, 285000, 2, 0.03);
 	}

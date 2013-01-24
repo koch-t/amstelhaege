@@ -1,6 +1,8 @@
 package graph;
 public class Tuple implements Cloneable{
 
+	public static double hookefactor=1;
+	public static double coulombfactor= 1e-7;;
 
 	public double dx,dy;
 	public Tuple (double dx, double dy){
@@ -28,14 +30,13 @@ public class Tuple implements Cloneable{
 	}	
 
 	public static Tuple coulombRepulsion(Vertex pThis, Vertex pOther,double distance) {
-		final double coulombFactor = 1e-7;
-		double s = 1.0 / Math.pow(distance,3);
-		return new Tuple((pOther.getPosition().dx - pThis.getPosition().dx) / s * coulombFactor, (pOther.getPosition().dy - pThis.getPosition().dy) / s * coulombFactor);
+		double s = 1.0 / Math.pow(distance,2);
+		double productcharge = pThis.getMass()*pOther.getMass();
+		return new Tuple(((pOther.getPosition().dx - pThis.getPosition().dx)*productcharge) / s * coulombfactor, ((pOther.getPosition().dy - pThis.getPosition().dy)*productcharge) / s * coulombfactor);
 	}
 
 	public static Tuple hookeAttraction(Vertex pThis, Vertex pOther) {
-		final double hookeFactor=1;
-		return new Tuple((pOther.getPosition().dx - pThis.getPosition().dx) * (-hookeFactor), (pOther.getPosition().dy - pThis.getPosition().dy) * (-hookeFactor));
+		return new Tuple((pOther.getPosition().dx - pThis.getPosition().dx) * (-hookefactor), (pOther.getPosition().dy - pThis.getPosition().dy) * (-hookefactor));
 	}
 	public Tuple clone(){
 		return new Tuple(this.dx,this.dy);

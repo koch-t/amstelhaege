@@ -3,6 +3,8 @@ package graph;
 import java.util.ArrayList;
 
 import district.Groundplan;
+import districtobjects.Bungalow;
+import districtobjects.Cottage;
 import districtobjects.Ground;
 import districtobjects.Residence;
 import districtobjects.WaterBody;
@@ -73,6 +75,7 @@ public class Graph{
 	}
 	
 	public ArrayList<Vertex> buildGraph(Groundplan plan){
+		double mass;
 		ArrayList<Vertex> vertices = new ArrayList<Vertex>(100);
 		for (Residence r: plan.getResidences()){
 			vertices.add(new Vertex(r));

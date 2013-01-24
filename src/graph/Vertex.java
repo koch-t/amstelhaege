@@ -45,7 +45,6 @@ public class Vertex implements Cloneable{
     	this.p = p;
     	this.isfixed = isfixed;
     	velocity = new Tuple(0,0);
-    	
     }
     
     public Vertex(boolean isfixed){

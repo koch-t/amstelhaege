@@ -1,6 +1,11 @@
 package algorithms;
 
+import datastructures.Charges;
+import datastructures.Pair;
 import district.*;
+import districtobjects.Bungalow;
+import districtobjects.Cottage;
+import districtobjects.Mansion;
 import districtobjects.Residence;
 import graph.Graph;
 import graph.Tuple;
@@ -34,14 +39,15 @@ public class SimulatedAnnealing {
 	}
 
 	//Runs the algorithms
-	public Groundplan getOptimalSolution(int maxiter){
+	public Groundplan getOptimalSolution(int maxiter,Charges charges){
 		
 		double currentvalue,nextvalue;
+		setCharges(charges);
 		
+		currentvalue=currentplan.getGroundplan().getPlanValue();
 		for(int i=0;i<=maxiter;i++)
 		{
-			currentvalue=currentplan.getGroundplan().getPlanValue();
-			springembedding.springEmbed(currentplan);
+			springembedding.springEmbed(nextplan);
 			
 			//bereken startCurrentValue en startNextValue (deze zijn nodig voor berekenen T)
 			
@@ -60,8 +66,19 @@ public class SimulatedAnnealing {
 		return optimalplan.getGroundplan();
 	}
 		
-	
-	
+	//Sets the charges of the vertices
+	private void setCharges(Charges charges) {
+		for(Vertex v:nextplan.getVertices())
+		{
+			if(v.getPlaceable() instanceof Cottage)
+				v.setMass(charges.cottagecharge);
+			else if(v.getPlaceable() instanceof Bungalow)
+				v.setMass(charges.bungalowcharge);
+			else if(v.getPlaceable() instanceof Mansion)
+				v.setMass(charges.mansioncharge);
+		}
+	}
+
 	private double getPenalty() {
 		double penalty=0;
 		

@@ -16,7 +16,6 @@ public class SpringEmbedding {
 
 	public final double DAMPING = 0.005;
 	public final double TIMESTEP = 1;
-	public int debugint=0;
 	Random random;
 	
 	public SpringEmbedding()
@@ -66,9 +65,7 @@ public class SpringEmbedding {
 			
 			vertices= g.setNearestNeighbours();
 		
-		}
-		debugint++;
-		
+		}		
 	}
 
 	private void removeStack(Vertex v,ArrayList<Vertex> vertices) {

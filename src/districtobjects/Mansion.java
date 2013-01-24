@@ -8,6 +8,7 @@ package districtobjects;
  *
  */
 public class Mansion extends Residence {
+	
 	public Mansion(){
 		super(11.0, 10.5, 610000, 6, 0.06);
 	}
