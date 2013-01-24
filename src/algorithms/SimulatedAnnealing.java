@@ -37,6 +37,11 @@ public class SimulatedAnnealing {
 		
 		double startValueOfT;
 	}
+	
+	public Groundplan getGroundplan()
+	{
+		return optimalplan.getGroundplan();
+	}
 
 	//Runs the algorithms
 	public Groundplan getOptimalSolution(int maxiter,Charges charges){

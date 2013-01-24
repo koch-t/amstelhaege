@@ -31,7 +31,6 @@ public class DistrictPlanner {
 		random = new Random(1);
 		frame = new GroundplanFrame();
 		int houses=20;
-		algorithm = new SimulatedAnnealing(randomPlan(houses));
 
 		Groundplan plan = planWijk(houses);
 		printSolution(plan);
@@ -43,37 +42,64 @@ public class DistrictPlanner {
 	 */
 	public Groundplan planWijk(int houses) {
 		int infeasiblesolutions=0;
+		Groundplan optimalSolution=null;
+		double bestsolution=0;
 		Charges charges = new Charges(1,1,1,0,0);
-		Groundplan currentSolution;
-		Groundplan solution;
+		Groundplan currentSolution=null;
+		double size = Groundplan.WIDTH * Groundplan.HEIGHT * Groundplan.MINIMUM_WATER_PERCENTAGE;
+		double width =Math.sqrt(size/4);
+		double height=size/width;
 		
-		while(true)
+		algorithm = new SimulatedAnnealing(randomPlan(houses,width,height));
+		optimalSolution=algorithm.getGroundplan();
+		while(height>31)
 		{
 			//Calc initial solution:
-			currentSolution=algorithm.getOptimalSolution(999,charges);
+			currentSolution=algorithm.getOptimalSolution(1000,charges);
 			charges = new Charges(1,1,1,0,0);
-			printSolution(currentSolution);
+			printSolution(currentSolution);		
 			
-			while(infeasiblesolutions<=2)
+			currentSolution = runSimulatedAnnealingChangingCharge(houses,
+					infeasiblesolutions, charges, currentSolution, width,
+					height);
+			width++;
+			height=size/width;
+			if(currentSolution.isValid() && currentSolution.getPlanValue()>optimalSolution.getPlanValue())
 			{
-				//run 10000 iterations of simulated annealing algorithm
-				algorithm = new SimulatedAnnealing(randomPlan(houses));
-				printSolution(currentSolution);
-				
-				solution= algorithm.getOptimalSolution(999,charges);
-				
-				printSolution(solution);
-				if(!solution.isValid())
-					infeasiblesolutions++;
-				else infeasiblesolutions=0;
-				if(solution.getPlanValue()>currentSolution.getPlanValue())
-				{
-					System.out.println("Value: "+solution.getPlanValue()+" Feasible: "+solution.isValid());
-					increaseCharges(charges);
-					currentSolution=solution;
-				}
+				optimalSolution=currentSolution;
+				bestsolution=optimalSolution.getPlanValue();
+				System.out.println("Best value: "+bestsolution);
 			}
 		}
+		return currentSolution;
+	}
+
+	private Groundplan runSimulatedAnnealingChangingCharge(int houses,
+			int infeasiblesolutions, Charges charges,
+			Groundplan currentSolution, double width, double height) {
+		
+		Groundplan solution;
+		while(infeasiblesolutions<=2)
+		{
+			//run x iterations of simulated annealing algorithm
+			algorithm = new SimulatedAnnealing(randomPlan(houses,width,height));
+			printSolution(currentSolution);
+			
+			solution= algorithm.getOptimalSolution(1000,charges);
+			
+			printSolution(solution);
+			if(!solution.isValid())
+				infeasiblesolutions++;
+			else infeasiblesolutions=0;
+			if(solution.getPlanValue()>currentSolution.getPlanValue() && solution.isValid())
+			{
+				System.out.println("Value: "+solution.getPlanValue()+" Feasible: "+solution.isValid());
+				currentSolution=solution;
+			}
+			else infeasiblesolutions++;
+			increaseCharges(charges);
+		}
+		return currentSolution;
 	}
 
 	private void printSolution(Groundplan solution) {
@@ -91,7 +117,7 @@ public class DistrictPlanner {
 			charges.mansioncharge+=0.5;		
 	}
 
-	private Groundplan randomPlan(int houses) {
+	private Groundplan randomPlan(int houses,double waterwidth,double waterheight) {
 		Groundplan plan = new Groundplan(houses);
 		
 		for (int i = 0; i < Groundplan.MINIMUM_COTTAGE_PERCENTAGE * houses; i++) {
@@ -109,10 +135,8 @@ public class DistrictPlanner {
 					* Groundplan.WIDTH, random.nextDouble() * Groundplan.HEIGHT));
 		}
 
-		double size = Groundplan.WIDTH * Groundplan.HEIGHT * Groundplan.MINIMUM_WATER_PERCENTAGE;
-		double length = Math.sqrt(size);
-		plan.addWaterBody(new WaterBody(random.nextDouble() * (Groundplan.WIDTH - length),
-				random.nextDouble() * (Groundplan.HEIGHT - length), length, length));
+		plan.addWaterBody(new WaterBody(random.nextDouble() * (Groundplan.WIDTH - (waterwidth/4)),
+				random.nextDouble() * (Groundplan.HEIGHT - (waterheight/4)), waterwidth, waterheight));
 		
 		//System.out.println("Value of the plan: "+plan.getPlanValue());
 		return plan;
