@@ -30,7 +30,7 @@ public class DistrictPlanner {
 	public DistrictPlanner() {
 		random = new Random(1);
 		frame = new GroundplanFrame();
-		int houses=20;
+		int houses=60;
 
 		Groundplan plan = planWijk(houses);
 		printSolution(plan);
@@ -46,17 +46,17 @@ public class DistrictPlanner {
 		double bestsolution=0;
 		Charges charges = new Charges(1,1,1,0,0);
 		Groundplan currentSolution=null;
-		double size = Groundplan.WIDTH * Groundplan.HEIGHT * Groundplan.MINIMUM_WATER_PERCENTAGE;
+		int nowaterbodies=1;
+		double size = (Groundplan.WIDTH * Groundplan.HEIGHT * Groundplan.MINIMUM_WATER_PERCENTAGE)/nowaterbodies;
 		double width =Math.sqrt(size/4);
 		double height=size/width;
 		
-		algorithm = new SimulatedAnnealing(randomPlan(houses,width,height));
+		algorithm = new SimulatedAnnealing(randomPlan(houses,width,height,nowaterbodies));
 		optimalSolution=algorithm.getGroundplan();
 		while(height>31)
 		{
 			//Calc initial solution:
 			currentSolution=algorithm.getOptimalSolution(1000,charges);
-			charges = new Charges(1,1,1,0,0);
 			printSolution(currentSolution);		
 			
 			currentSolution = runSimulatedAnnealingChangingCharge(houses,
@@ -78,11 +78,12 @@ public class DistrictPlanner {
 			int infeasiblesolutions, Charges charges,
 			Groundplan currentSolution, double width, double height) {
 		
+		charges = new Charges(1,1,1,0,0);
 		Groundplan solution;
 		while(infeasiblesolutions<=2)
 		{
 			//run x iterations of simulated annealing algorithm
-			algorithm = new SimulatedAnnealing(randomPlan(houses,width,height));
+			algorithm = new SimulatedAnnealing(randomPlan(houses,width,height,4));
 			printSolution(currentSolution);
 			
 			solution= algorithm.getOptimalSolution(1000,charges);
@@ -117,7 +118,7 @@ public class DistrictPlanner {
 			charges.mansioncharge+=0.5;		
 	}
 
-	private Groundplan randomPlan(int houses,double waterwidth,double waterheight) {
+	private Groundplan randomPlan(int houses,double waterwidth,double waterheight,int waterbodies) {
 		Groundplan plan = new Groundplan(houses);
 		
 		for (int i = 0; i < Groundplan.MINIMUM_COTTAGE_PERCENTAGE * houses; i++) {
@@ -134,8 +135,9 @@ public class DistrictPlanner {
 			plan.addResidence(new Mansion(random.nextDouble()
 					* Groundplan.WIDTH, random.nextDouble() * Groundplan.HEIGHT));
 		}
-
-		plan.addWaterBody(new WaterBody(random.nextDouble() * (Groundplan.WIDTH - (waterwidth/4)),
+		
+		for(int i=0;i<waterbodies;i++)
+			plan.addWaterBody(new WaterBody(random.nextDouble() * (Groundplan.WIDTH - (waterwidth/4)),
 				random.nextDouble() * (Groundplan.HEIGHT - (waterheight/4)), waterwidth, waterheight));
 		
 		//System.out.println("Value of the plan: "+plan.getPlanValue());
