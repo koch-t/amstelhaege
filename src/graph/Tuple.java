@@ -4,7 +4,7 @@ import districtobjects.WaterBody;
 
 public class Tuple implements Cloneable{
 
-	public static double hookefactor=-10;
+	public static double hookefactor=0;
 	public static double coulombfactor= 1e-7;;
 
 	public double dx,dy;

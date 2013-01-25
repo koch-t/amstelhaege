@@ -70,7 +70,7 @@ public class SimulatedAnnealing {
 				if(determineAcception(currentvalue, nextvalue))
 					cloneGroundPlans(nextvalue);
 			}
-			Tuple.hookefactor+=0.03;
+			Tuple.hookefactor+=0.01;
 		}
 		return optimalplan.getGroundplan();
 	}

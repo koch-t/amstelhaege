@@ -30,7 +30,7 @@ public class DistrictPlanner {
 	public DistrictPlanner() {
 		random = new Random(1);
 		frame = new GroundplanFrame();
-		int houses=60;
+		int houses=40;
 
 		Groundplan plan = planWijk(houses,1000);
 		printSolution(plan);
@@ -53,6 +53,7 @@ public class DistrictPlanner {
 		{
 			//Calc initial solution:
 			currentSolution=algorithm.getOptimalSolution(iter,charges,frame);
+			Tuple.hookefactor=0;
 			printSolution(currentSolution);		
 			
 			currentSolution = runSimulatedAnnealingChangingCharge(houses,
@@ -80,6 +81,7 @@ public class DistrictPlanner {
 			printSolution(currentSolution);
 			
 			solution= algorithm.getOptimalSolution(iter,charges,frame);
+			Tuple.hookefactor=0;
 			
 			printSolution(solution);
 			if(!solution.isValid())
