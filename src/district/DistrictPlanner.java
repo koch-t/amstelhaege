@@ -32,7 +32,7 @@ public class DistrictPlanner {
 		frame = new GroundplanFrame();
 		int houses=60;
 
-		Groundplan plan = planWijk(houses,10000);
+		Groundplan plan = planWijk(houses,1000);
 		printSolution(plan);
 		
 	}
@@ -49,7 +49,7 @@ public class DistrictPlanner {
 		
 		algorithm = new SimulatedAnnealing(randomPlan(houses));
 		optimalSolution=algorithm.getGroundplan();
-		for(int i=0;i<=100;i++)
+		for(int i=0;i<=5;i++)
 		{
 			//Calc initial solution:
 			currentSolution=algorithm.getOptimalSolution(iter,charges,frame);
