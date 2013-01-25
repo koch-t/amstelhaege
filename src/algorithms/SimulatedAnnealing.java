@@ -18,7 +18,7 @@ public class SimulatedAnnealing {
 	
 	//Private vars:
 	private Graph optimalplan;
-	private Pair startTValues;
+	private Pair<Double,Double> startTValues;
 	private Graph currentplan;
 	private Graph nextplan;
 	private SpringEmbedding springembedding;
