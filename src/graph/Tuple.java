@@ -1,7 +1,7 @@
 package graph;
 public class Tuple implements Cloneable{
 
-	public static double hookefactor=1;
+	public static double hookefactor=0.7;
 	public static double coulombfactor= 1e-7;;
 
 	public double dx,dy;
