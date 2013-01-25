@@ -44,7 +44,7 @@ public class SimulatedAnnealing {
 	}
 
 	//Runs the algorithms
-	public Groundplan getOptimalSolution(int maxiter,Charges charges){
+	public Groundplan getOptimalSolution(int maxiter,Charges charges,GroundplanFrame frame){
 		
 		double currentvalue,nextvalue;
 		setCharges(charges);
@@ -58,6 +58,9 @@ public class SimulatedAnnealing {
 			
 			nextvalue=nextplan.getGroundplan().getPlanValue()-getPenalty();
 			
+			//Print every solution of spring embedding algorithm
+			//printSolution(frame);
+			
 			if(i==0) setT(currentvalue,nextvalue);
 			if(currentvalue<nextvalue){
 				cloneGroundPlans(nextvalue);
@@ -69,6 +72,11 @@ public class SimulatedAnnealing {
 			}
 		}
 		return optimalplan.getGroundplan();
+	}
+
+	private void printSolution(GroundplanFrame frame) {
+		frame.setPlan(nextplan.getGroundplan());
+		System.out.println("Value: "+nextplan.getGroundplan().getPlanValue()+" feasible: "+nextplan.getGroundplan().isValid());
 	}
 		
 	//Sets the charges of the vertices

@@ -46,15 +46,13 @@ public class DistrictPlanner {
 		double bestsolution=0;
 		Charges charges = new Charges(1,1,1,0,0);
 		Groundplan currentSolution=null;
-		int nowaterbodies=1;
-
 		
 		algorithm = new SimulatedAnnealing(randomPlan(houses));
 		optimalSolution=algorithm.getGroundplan();
 		while(true)
 		{
 			//Calc initial solution:
-			currentSolution=algorithm.getOptimalSolution(1000,charges);
+			currentSolution=algorithm.getOptimalSolution(1000,charges,frame);
 			printSolution(currentSolution);		
 			
 			currentSolution = runSimulatedAnnealingChangingCharge(houses,
@@ -81,7 +79,7 @@ public class DistrictPlanner {
 			algorithm = new SimulatedAnnealing(randomPlan(houses));
 			printSolution(currentSolution);
 			
-			solution= algorithm.getOptimalSolution(1000,charges);
+			solution= algorithm.getOptimalSolution(1000,charges,frame);
 			
 			printSolution(solution);
 			if(!solution.isValid())
