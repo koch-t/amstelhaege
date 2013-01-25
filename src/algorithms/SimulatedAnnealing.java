@@ -59,7 +59,7 @@ public class SimulatedAnnealing {
 			nextvalue=nextplan.getGroundplan().getPlanValue()-getPenalty();
 			
 			//Print every solution of spring embedding algorithm
-			//printSolution(frame);
+			printSolution(frame);
 			
 			if(i==0) setT(currentvalue,nextvalue);
 			if(currentvalue<nextvalue){
@@ -70,6 +70,7 @@ public class SimulatedAnnealing {
 				if(determineAcception(currentvalue, nextvalue))
 					cloneGroundPlans(nextvalue);
 			}
+			Tuple.hookefactor+=0.03;
 		}
 		return optimalplan.getGroundplan();
 	}
