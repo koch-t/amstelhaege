@@ -30,9 +30,9 @@ public class DistrictPlanner {
 	public DistrictPlanner() {
 		random = new Random(1);
 		frame = new GroundplanFrame();
-		int houses=20;
+		int houses=40;
 
-		Groundplan plan = planWijk(houses);
+		Groundplan plan = planWijk(houses,1000);
 		printSolution(plan);
 		
 	}
@@ -40,23 +40,24 @@ public class DistrictPlanner {
 	/**
 	 * Startpunt voor het oplossen van de opdracht
 	 */
-	public Groundplan planWijk(int houses) {
+	public Groundplan planWijk(int houses, int iter) {
 		int infeasiblesolutions=0;
 		Groundplan optimalSolution=null;
 		double bestsolution=0;
-		Charges charges = new Charges(1,1,1,0,0);
+		Charges charges = new Charges(1,2,3,0,0);
 		Groundplan currentSolution=null;
 		
 		algorithm = new SimulatedAnnealing(randomPlan(houses));
 		optimalSolution=algorithm.getGroundplan();
-		while(true)
+		for(int i=0;i<=5;i++)
 		{
 			//Calc initial solution:
-			currentSolution=algorithm.getOptimalSolution(1000,charges,frame);
+			currentSolution=algorithm.getOptimalSolution(iter,charges,frame);
+			Tuple.hookefactor=0;
 			printSolution(currentSolution);		
 			
 			currentSolution = runSimulatedAnnealingChangingCharge(houses,
-					infeasiblesolutions, charges, currentSolution);
+					infeasiblesolutions, charges, currentSolution,iter);
 			if(currentSolution.isValid() && currentSolution.getPlanValue()>optimalSolution.getPlanValue())
 			{
 				optimalSolution=currentSolution;
@@ -64,12 +65,12 @@ public class DistrictPlanner {
 				System.out.println("Best value: "+bestsolution);
 			}
 		}
-		//return currentSolution;
+		return currentSolution;
 	}
 
 	private Groundplan runSimulatedAnnealingChangingCharge(int houses,
 			int infeasiblesolutions, Charges charges,
-			Groundplan currentSolution) {
+			Groundplan currentSolution,int iter) {
 		
 		charges = new Charges(1,1,1,0,0);
 		Groundplan solution;
@@ -79,7 +80,8 @@ public class DistrictPlanner {
 			algorithm = new SimulatedAnnealing(randomPlan(houses));
 			printSolution(currentSolution);
 			
-			solution= algorithm.getOptimalSolution(1000,charges,frame);
+			solution= algorithm.getOptimalSolution(iter,charges,frame);
+			Tuple.hookefactor=0;
 			
 			printSolution(solution);
 			if(!solution.isValid())
@@ -91,7 +93,7 @@ public class DistrictPlanner {
 				currentSolution=solution;
 			}
 			else infeasiblesolutions++;
-			increaseCharges(charges);
+			//increaseCharges(charges);
 		}
 		return currentSolution;
 	}
