@@ -30,7 +30,7 @@ public class GraphCloneTest {
 	@Before
 	public void setUp() throws Exception {
 		planner = new DistrictPlanner();
-		testgraph = new Graph(planner.planWijk());
+		//testgraph = new Graph(planner.planWijk());
 		testgraph.setNearestNeighbours();
 	}
 

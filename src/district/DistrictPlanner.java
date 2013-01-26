@@ -22,19 +22,31 @@ import districtobjects.WaterBody;
  * 
  */
 public class DistrictPlanner {
-	Random random;
-	GroundplanFrame frame;
-	SimulatedAnnealing algorithm;
+	private Random random;
+	private GroundplanFrame frame;
+	private DistrictGenerator generator;
+	private SimulatedAnnealing algorithm;
+	
 	private static final int SCALE = 1;
 
 	public DistrictPlanner() {
 		random = new Random(1);
 		frame = new GroundplanFrame();
-		int houses=40;
-
-		Groundplan plan = planWijk(houses,1000);
+		int houses=60;
+		Groundplan plan= new Groundplan(houses);
+		generator = new DistrictGenerator(plan,houses);
+		plan = planWijk(houses,10000);
+		//printStartDistricts();
 		printSolution(plan);
 		
+	}
+	
+	/** Used for testing*/
+	public void printStartDistricts()
+	{
+		printSolution(generator.generateDistrict1());
+		printSolution(generator.generateDistrict2());
+		printSolution(generator.generateFlat());
 	}
 
 	/**
@@ -44,16 +56,14 @@ public class DistrictPlanner {
 		int infeasiblesolutions=0;
 		Groundplan optimalSolution=null;
 		double bestsolution=0;
-		Charges charges = new Charges(1,2,3,0,0);
+		Charges charges = new Charges(0,2,5,0,0);
 		Groundplan currentSolution=null;
 		
-		algorithm = new SimulatedAnnealing(randomPlan(houses));
+		algorithm = new SimulatedAnnealing(generator.generateDistrict2());
 		optimalSolution=algorithm.getGroundplan();
-		for(int i=0;i<=5;i++)
-		{
 			//Calc initial solution:
+			Tuple.hookefactor=1;
 			currentSolution=algorithm.getOptimalSolution(iter,charges,frame);
-			Tuple.hookefactor=0;
 			printSolution(currentSolution);		
 			
 			currentSolution = runSimulatedAnnealingChangingCharge(houses,
@@ -64,7 +74,6 @@ public class DistrictPlanner {
 				bestsolution=optimalSolution.getPlanValue();
 				System.out.println("Best value: "+bestsolution);
 			}
-		}
 		return currentSolution;
 	}
 
@@ -72,29 +81,15 @@ public class DistrictPlanner {
 			int infeasiblesolutions, Charges charges,
 			Groundplan currentSolution,int iter) {
 		
-		charges = new Charges(1,1,1,0,0);
 		Groundplan solution;
-		while(infeasiblesolutions<=2)
-		{
+		
 			//run x iterations of simulated annealing algorithm
-			algorithm = new SimulatedAnnealing(randomPlan(houses));
-			printSolution(currentSolution);
+		algorithm = new SimulatedAnnealing(generator.generateDistrict2());
+		printSolution(currentSolution);
 			
-			solution= algorithm.getOptimalSolution(iter,charges,frame);
-			Tuple.hookefactor=0;
+		solution= algorithm.getOptimalSolution(iter,charges,frame);
 			
-			printSolution(solution);
-			if(!solution.isValid())
-				infeasiblesolutions++;
-			else infeasiblesolutions=0;
-			if(solution.getPlanValue()>currentSolution.getPlanValue() && solution.isValid())
-			{
-				System.out.println("Value: "+solution.getPlanValue()+" Feasible: "+solution.isValid());
-				currentSolution=solution;
-			}
-			else infeasiblesolutions++;
-			//increaseCharges(charges);
-		}
+		printSolution(solution);
 		return currentSolution;
 	}
 
@@ -113,40 +108,6 @@ public class DistrictPlanner {
 			charges.mansioncharge+=0.5;		
 	}
 
-	private Groundplan randomPlan(int houses) {
-		Groundplan plan = new Groundplan(houses);
-		
-		for (int i = 0; i < Groundplan.MINIMUM_COTTAGE_PERCENTAGE * houses; i++) {
-			plan.addResidence(new Cottage(random.nextDouble()
-					* Groundplan.WIDTH, random.nextDouble() * Groundplan.HEIGHT));
-		}
-
-		for (int i = 0; i < Groundplan.MINIMUM_BUNGALOW_PERCENTAGE *houses ; i++) {
-			plan.addResidence(new Bungalow(random.nextDouble()
-					* Groundplan.WIDTH, random.nextDouble() * Groundplan.HEIGHT));
-		}
-
-		for (int i = 0; i < Groundplan.MINIMUM_MANSION_PERCENTAGE * houses; i++) {
-			plan.addResidence(new Mansion(random.nextDouble()
-					* Groundplan.WIDTH, random.nextDouble() * Groundplan.HEIGHT));
-		}
-		
-		createWater(plan);
-	
-		
-		//System.out.println("Value of the plan: "+plan.getPlanValue());
-		return plan;
-	}
-
-	private void createWater(Groundplan plan) {
-		double size = (Groundplan.WIDTH * Groundplan.HEIGHT * Groundplan.MINIMUM_WATER_PERCENTAGE)/4;
-		double height =Math.sqrt(size/4);
-		double width=size/height;
-			plan.addWaterBody(new WaterBody(0,0, width, height));
-			plan.addWaterBody(new WaterBody(Groundplan.WIDTH-width,0, width, height));
-			plan.addWaterBody(new WaterBody(0,Groundplan.HEIGHT-height, width, height));
-			plan.addWaterBody(new WaterBody(Groundplan.WIDTH-width,Groundplan.HEIGHT-height, width, height));
-	}
 
 	/**
 	 * @param args

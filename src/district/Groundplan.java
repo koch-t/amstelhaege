@@ -27,6 +27,8 @@ public class Groundplan {
 	public static final double	MINIMUM_BUNGALOW_PERCENTAGE = 0.25;
 	public static final double	MINIMUM_MANSION_PERCENTAGE	= 0.15;
 
+	public static final boolean DEBUG = true;
+
 	private ArrayList<Residence> residences;
 	private ArrayList<WaterBody> waterBodies;
 	private Ground ground;
@@ -80,14 +82,16 @@ public class Groundplan {
 				|| ((double) nCottages / nHouses) < MINIMUM_COTTAGE_PERCENTAGE
 				|| ((double) nBungalows / nHouses) < MINIMUM_BUNGALOW_PERCENTAGE
 				|| ((double) nMansions / nHouses) < MINIMUM_MANSION_PERCENTAGE){
-			System.out.println("Something below mininum percentage");
+			if (DEBUG)
+				System.out.println("Something below mininum percentage");
 			return false;
 		}else{
 			double waterSurfaceArea = 0;
 			// Check water body placement
 			for(WaterBody waterBody : waterBodies){
 				if(!isCorrectlyPlaced(waterBody)){
-					//System.out.println("Invalid water body placement");
+					if (DEBUG)
+						System.out.println("Invalid water body placement");
 					return false;
 				}else{
 					waterSurfaceArea += waterBody.getWidth() * waterBody.getHeight();
@@ -96,14 +100,16 @@ public class Groundplan {
 			// Check water percentage
 			double groundSurfaceArea = WIDTH * HEIGHT;
 			if((double) waterSurfaceArea / groundSurfaceArea < MINIMUM_WATER_PERCENTAGE){
-				//System.out.println("Not enough water");
+				if (DEBUG)
+					System.out.println("Not enough water");
 				return false;
 			}
 
 			// Check residence placement
 			for(Residence residence : residences){
 				if(!isCorrectlyPlaced(residence)){
-					//System.out.println("Residence placement faulty");
+					if (DEBUG)
+						System.out.println("Residence placement faulty");
 					return false;
 				}
 			}
@@ -118,7 +124,8 @@ public class Groundplan {
 				|| placeable.topEdge() < ground.topEdge()
 				|| placeable.bottomEdge() > ground.bottomEdge()){
 			// Residence is not fully intersecting the ground
-			//System.out.println("Placeable outside ground");
+			if (DEBUG)
+				System.out.println("Placeable outside ground");
 			return false;
 		}
 
@@ -128,7 +135,8 @@ public class Groundplan {
 					|| placeable.rightEdge() > ground.rightEdge() - ((Residence) placeable).getMinimumDistance()
 					|| placeable.topEdge() < ((Residence) placeable).getMinimumDistance()
 					|| placeable.bottomEdge() > ground.bottomEdge() - ((Residence) placeable).getMinimumDistance()){
-				//System.out.println("Placeable to close");
+				if (DEBUG)
+					System.out.println("Placeable to close "+placeable.getClass().getCanonicalName());
 				return false;
 			}
 		}
@@ -140,7 +148,8 @@ public class Groundplan {
 					&& placeable.topEdge() < waterBody.bottomEdge()
 					&& placeable.bottomEdge() > waterBody.topEdge()){
 				// intersecting
-				//System.out.println("Intersecting with water");
+				if (DEBUG)
+					System.out.println("Intersecting with water");
 				return false;
 			}
 		}
@@ -152,19 +161,21 @@ public class Groundplan {
 					&& placeable.topEdge() < other.bottomEdge()
 					&& placeable.bottomEdge() > other.topEdge()){
 				// intersecting
-				//System.out.println("Intersecting with other placeables");
+				if (DEBUG)
+					System.out.println("Intersecting with other placeables");
 				return false;
 			}else if(placeable instanceof Residence
 					&& placeable != other
 					&& getDistance((Residence) placeable, other) < ((Residence) placeable).getMinimumDistance()){
 				// check distance
-				//System.out.println("Residence below minimum distance");
+				if (DEBUG)
+					System.out.println("Residence below minimum distance " +placeable.getClass().getCanonicalName() + " " + other.getClass().getCanonicalName());
 				return false;
 			}
 		}
 		return true;
 	}
-	
+
 	public boolean intersectsWithWater(Placeable placeable)
 	{
 		for(WaterBody waterBody : waterBodies){
@@ -174,7 +185,8 @@ public class Groundplan {
 					&& placeable.topEdge() < waterBody.bottomEdge()
 					&& placeable.bottomEdge() > waterBody.topEdge()){
 				// intersecting
-				//System.out.println("Intersecting with water");
+				if (DEBUG)
+					System.out.println("Intersecting with water");
 				return true;
 			}
 		}

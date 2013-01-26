@@ -86,8 +86,9 @@ public class SpringEmbedding {
 	private void bounceOutOfWater(Vertex v, Graph graph) {
 		while(graph.getGroundplan().intersectsWithWater(v.getPlaceable()))
 		{
-			v.getPlaceable().setX(random.nextDouble()*Groundplan.WIDTH);
-			v.getPlaceable().setY(random.nextDouble()*Groundplan.HEIGHT);
+			//Set v to old position
+			v.getPlaceable().setX(v.getPosition().dx - (TIMESTEP * v.getVelocity().dx));
+			v.getPlaceable().setY(v.getPosition().dy - (TIMESTEP * v.getVelocity().dy));
 		}
 	}
 	
