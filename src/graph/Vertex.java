@@ -26,6 +26,7 @@ public class Vertex implements Cloneable{
     	Vertex clone = new Vertex(this.p,isfixed);
     	clone.velocity = velocity.clone();
     	clone.isfixed=isfixed;
+    	clone.mass=this.mass;
     	iscloned=true;
     	this.clone =clone; 
     	if(toVertex!=null)
