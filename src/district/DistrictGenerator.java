@@ -147,9 +147,56 @@ public class DistrictGenerator {
 				k=0;
 			}
 		}
-		double length=Math.sqrt((Groundplan.WIDTH*Groundplan.HEIGHT)*Groundplan.MINIMUM_WATER_PERCENTAGE);
-		plan.addWaterBody(new WaterBody(0,Groundplan.HEIGHT-length,
-				length,length));
+		double length1=Math.sqrt((Groundplan.WIDTH*Groundplan.HEIGHT)*Groundplan.MINIMUM_WATER_PERCENTAGE)+5;
+		double length2 = ((Groundplan.WIDTH*Groundplan.HEIGHT)*Groundplan.MINIMUM_WATER_PERCENTAGE)/length1;
+		plan.addWaterBody(new WaterBody(0,Groundplan.HEIGHT-length2,
+				length1,length2));
+		return plan;
+	}
+	
+	public Groundplan generateDistrict2()
+	{
+		plan = new Groundplan(houses);
+		int j=0;
+		int k=0;
+		for(int i=1;i<Groundplan.MINIMUM_COTTAGE_PERCENTAGE*houses;i++)
+		{
+			plan.addResidence(new Cottage(2+10*k,2+10*j));
+			k++;
+			if(i!=0 && i%6==0)
+			{
+				j++;
+				k=0;
+			}
+		}
+
+		j=3;
+		k=0;
+		for(int i=0;i<Groundplan.MINIMUM_BUNGALOW_PERCENTAGE*houses;i++)
+		{
+
+			plan.addResidence(new Bungalow(Groundplan.WIDTH-3-13*k,j));
+			k++;
+			if(i==4 || i==9) {
+				j+=10.5;
+				k=0;
+			}
+		}
+		
+		j=6;
+		k=0;
+		for(int i=0;i<Groundplan.MINIMUM_MANSION_PERCENTAGE*houses;i++)
+		{
+			plan.addResidence(new Mansion(55+k*17,Groundplan.HEIGHT-j));
+			k++;
+			if(i==3 || i==6){
+				j+=11;
+				k=0;
+			}
+		}
+		plan.addWaterBody(new WaterBody(60,0,35,40));
+		plan.addWaterBody(new WaterBody(0,60,30.5,40));
+		plan.addWaterBody(new WaterBody(Groundplan.WIDTH-40,60,40,30.5));
 		return plan;
 	}
 		
@@ -163,4 +210,5 @@ public class DistrictGenerator {
 				plan.addWaterBody(new WaterBody(0,Groundplan.HEIGHT-height, width, height));
 				plan.addWaterBody(new WaterBody(Groundplan.WIDTH-width,Groundplan.HEIGHT-height, width, height));
 	}
+	
 }

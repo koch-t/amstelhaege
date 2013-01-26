@@ -32,11 +32,11 @@ public class DistrictPlanner {
 	public DistrictPlanner() {
 		random = new Random(1);
 		frame = new GroundplanFrame();
-		int houses=20;
+		int houses=60;
 		Groundplan plan= new Groundplan(houses);
 		generator = new DistrictGenerator(plan,houses);
-		//plan = planWijk(houses,10000);
-		printStartDistricts();
+		plan = planWijk(houses,10000);
+		//printStartDistricts();
 		printSolution(plan);
 		
 	}
@@ -45,6 +45,7 @@ public class DistrictPlanner {
 	public void printStartDistricts()
 	{
 		printSolution(generator.generateDistrict1());
+		printSolution(generator.generateDistrict2());
 		printSolution(generator.generateFlat());
 	}
 
@@ -58,10 +59,8 @@ public class DistrictPlanner {
 		Charges charges = new Charges(0,2,5,0,0);
 		Groundplan currentSolution=null;
 		
-		algorithm = new SimulatedAnnealing(generator.generateDistrict1());
+		algorithm = new SimulatedAnnealing(generator.generateDistrict2());
 		optimalSolution=algorithm.getGroundplan();
-		for(int i=0;i<=5;i++)
-		{
 			//Calc initial solution:
 			Tuple.hookefactor=1;
 			currentSolution=algorithm.getOptimalSolution(iter,charges,frame);
@@ -75,7 +74,6 @@ public class DistrictPlanner {
 				bestsolution=optimalSolution.getPlanValue();
 				System.out.println("Best value: "+bestsolution);
 			}
-		}
 		return currentSolution;
 	}
 
@@ -86,7 +84,7 @@ public class DistrictPlanner {
 		Groundplan solution;
 		
 			//run x iterations of simulated annealing algorithm
-		algorithm = new SimulatedAnnealing(generator.generateDistrict1());
+		algorithm = new SimulatedAnnealing(generator.generateDistrict2());
 		printSolution(currentSolution);
 			
 		solution= algorithm.getOptimalSolution(iter,charges,frame);
