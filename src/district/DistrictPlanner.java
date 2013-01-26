@@ -22,19 +22,29 @@ import districtobjects.WaterBody;
  * 
  */
 public class DistrictPlanner {
-	Random random;
-	GroundplanFrame frame;
-	SimulatedAnnealing algorithm;
+	private Random random;
+	private GroundplanFrame frame;
+	private DistrictGenerator generator;
+	private SimulatedAnnealing algorithm;
+	
 	private static final int SCALE = 1;
 
 	public DistrictPlanner() {
 		random = new Random(1);
 		frame = new GroundplanFrame();
-		int houses=40;
-
-		Groundplan plan = planWijk(houses,1000);
+		int houses=20;
+		Groundplan plan= new Groundplan(houses);
+		generator = new DistrictGenerator(plan,houses);
+		//plan = planWijk(houses,1000);
+		printStartDistricts();
 		printSolution(plan);
 		
+	}
+	
+	public void printStartDistricts()
+	{
+		printSolution(generator.generateDistrict1());
+		printSolution(generator.generateFlat());
 	}
 
 	/**
@@ -47,7 +57,7 @@ public class DistrictPlanner {
 		Charges charges = new Charges(1,2,3,0,0);
 		Groundplan currentSolution=null;
 		
-		algorithm = new SimulatedAnnealing(randomPlan(houses));
+		algorithm = new SimulatedAnnealing(generator.generateRandomMap());
 		optimalSolution=algorithm.getGroundplan();
 		for(int i=0;i<=5;i++)
 		{
@@ -77,23 +87,13 @@ public class DistrictPlanner {
 		while(infeasiblesolutions<=2)
 		{
 			//run x iterations of simulated annealing algorithm
-			algorithm = new SimulatedAnnealing(randomPlan(houses));
+			algorithm = new SimulatedAnnealing(generator.generateRandomMap());
 			printSolution(currentSolution);
 			
 			solution= algorithm.getOptimalSolution(iter,charges,frame);
 			Tuple.hookefactor=0;
 			
 			printSolution(solution);
-			if(!solution.isValid())
-				infeasiblesolutions++;
-			else infeasiblesolutions=0;
-			if(solution.getPlanValue()>currentSolution.getPlanValue() && solution.isValid())
-			{
-				System.out.println("Value: "+solution.getPlanValue()+" Feasible: "+solution.isValid());
-				currentSolution=solution;
-			}
-			else infeasiblesolutions++;
-			//increaseCharges(charges);
 		}
 		return currentSolution;
 	}
@@ -113,40 +113,6 @@ public class DistrictPlanner {
 			charges.mansioncharge+=0.5;		
 	}
 
-	private Groundplan randomPlan(int houses) {
-		Groundplan plan = new Groundplan(houses);
-		
-		for (int i = 0; i < Groundplan.MINIMUM_COTTAGE_PERCENTAGE * houses; i++) {
-			plan.addResidence(new Cottage(random.nextDouble()
-					* Groundplan.WIDTH, random.nextDouble() * Groundplan.HEIGHT));
-		}
-
-		for (int i = 0; i < Groundplan.MINIMUM_BUNGALOW_PERCENTAGE *houses ; i++) {
-			plan.addResidence(new Bungalow(random.nextDouble()
-					* Groundplan.WIDTH, random.nextDouble() * Groundplan.HEIGHT));
-		}
-
-		for (int i = 0; i < Groundplan.MINIMUM_MANSION_PERCENTAGE * houses; i++) {
-			plan.addResidence(new Mansion(random.nextDouble()
-					* Groundplan.WIDTH, random.nextDouble() * Groundplan.HEIGHT));
-		}
-		
-		createWater(plan);
-	
-		
-		//System.out.println("Value of the plan: "+plan.getPlanValue());
-		return plan;
-	}
-
-	private void createWater(Groundplan plan) {
-		double size = (Groundplan.WIDTH * Groundplan.HEIGHT * Groundplan.MINIMUM_WATER_PERCENTAGE)/4;
-		double height =Math.sqrt(size/4);
-		double width=size/height;
-			plan.addWaterBody(new WaterBody(0,0, width, height));
-			plan.addWaterBody(new WaterBody(Groundplan.WIDTH-width,0, width, height));
-			plan.addWaterBody(new WaterBody(0,Groundplan.HEIGHT-height, width, height));
-			plan.addWaterBody(new WaterBody(Groundplan.WIDTH-width,Groundplan.HEIGHT-height, width, height));
-	}
 
 	/**
 	 * @param args
