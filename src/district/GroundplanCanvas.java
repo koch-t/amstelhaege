@@ -3,6 +3,7 @@ import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.image.BufferStrategy;
 
 import districtobjects.Residence;
 import districtobjects.WaterBody;
@@ -16,19 +17,28 @@ public class GroundplanCanvas extends Canvas {
 	private static final int MARGINLEFT = 2, MARGINTOP = 2;
 	private static final int SCALE = 6;
 	private Groundplan plan = null;
-	
+
 	public GroundplanCanvas(Groundplan plan){
 		this.plan = plan;
 	}
-	
+
 	public void paint(Graphics g){
 		setBackground(Color.white);
-	    g.setColor(Color.DARK_GRAY);
-	    g.drawRect(GroundplanCanvas.MARGINLEFT-1, GroundplanCanvas.MARGINTOP-1, (int)(Groundplan.WIDTH * SCALE) +2, (int)(Groundplan.HEIGHT * SCALE) +2);
-	    g.drawRect(GroundplanCanvas.MARGINLEFT-2, GroundplanCanvas.MARGINTOP-2, (int)(Groundplan.WIDTH * SCALE) +4, (int)(Groundplan.HEIGHT * SCALE) +4);
-	    this.tekenVeld(g);
+		g.setColor(Color.DARK_GRAY);
+		g.drawRect(GroundplanCanvas.MARGINLEFT-1, GroundplanCanvas.MARGINTOP-1, (int)(Groundplan.WIDTH * SCALE) +2, (int)(Groundplan.HEIGHT * SCALE) +2);
+		g.drawRect(GroundplanCanvas.MARGINLEFT-2, GroundplanCanvas.MARGINTOP-2, (int)(Groundplan.WIDTH * SCALE) +4, (int)(Groundplan.HEIGHT * SCALE) +4);
+		this.tekenVeld(g);
 	}
-	
+
+
+	public void resetPlan(Groundplan plan) {
+		this.plan = plan;
+		BufferStrategy strategy = getBufferStrategy();
+		Graphics g = strategy.getDrawGraphics();
+		this.paint(g);
+		strategy.show();
+	}
+
 	// Deze methode tekent het hele veld
 	private void tekenVeld(Graphics g){
 		Graphics2D g2d = (Graphics2D) g;
