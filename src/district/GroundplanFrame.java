@@ -16,12 +16,12 @@ public class GroundplanFrame extends Frame {
 	private GroundplanCanvas groundplanCanvas = null;
 
 	public GroundplanFrame(){
-	 	// frame instellingen:
+		// frame instellingen:
 		setTitle("Heuristieken 2012 - Amstelhaege!");
 		setLayout(new BorderLayout());
 		setSize(1100,850);
 		setVisible(true);
-		
+
 		this.addWindowListener(new WindowAdapter(){
 			@Override
 			public void windowClosing(WindowEvent e) {
@@ -29,7 +29,7 @@ public class GroundplanFrame extends Frame {
 				System.exit(0);
 			}
 		});
-		
+
 		this.addKeyListener(new KeyAdapter() {
 
 			@Override
@@ -39,10 +39,10 @@ public class GroundplanFrame extends Frame {
 					System.exit(0);
 				}
 			}
-			
+
 		});
 	}
-	
+
 	public void repaint(){
 		super.repaint();
 	}
@@ -50,11 +50,13 @@ public class GroundplanFrame extends Frame {
 	public void setPlan(Groundplan plan) {
 		this.plan = plan;
 		if(groundplanCanvas != null){
-			remove(groundplanCanvas);
+			groundplanCanvas.resetPlan(plan);
+		}else{
+			groundplanCanvas = new GroundplanCanvas(plan);
+			add(this.groundplanCanvas, BorderLayout.CENTER);
+			groundplanCanvas.createBufferStrategy(4);
 		}
-		groundplanCanvas = new GroundplanCanvas(plan);
-		add(this.groundplanCanvas, BorderLayout.CENTER);
-		
+
 		this.invalidate();
 		this.validate();
 	}
