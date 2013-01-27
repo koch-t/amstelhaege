@@ -18,6 +18,8 @@ public class GroundplanCanvas extends Canvas {
 	private static final int SCALE = 6;
 	private Groundplan plan = null;
 
+	private final static boolean SHOW_TRAIL = false;
+
 	public GroundplanCanvas(Groundplan plan){
 		this.plan = plan;
 	}
@@ -34,7 +36,11 @@ public class GroundplanCanvas extends Canvas {
 	public void resetPlan(Groundplan plan) {
 		this.plan = plan;
 		BufferStrategy strategy = getBufferStrategy();
-		Graphics g = strategy.getDrawGraphics();
+		Graphics2D g = (Graphics2D) strategy.getDrawGraphics();
+		if (!SHOW_TRAIL){
+			g.setPaint(Color.WHITE);
+			g.fillRect(0, 0, getWidth(), getHeight());
+		}
 		this.paint(g);
 		strategy.show();
 	}
