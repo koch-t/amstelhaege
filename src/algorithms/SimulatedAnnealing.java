@@ -49,14 +49,15 @@ public class SimulatedAnnealing {
 		double currentvalue,nextvalue;
 		setCharges(charges);
 		
-		currentvalue=currentplan.getGroundplan().getPlanValue();
+		currentvalue=currentplan.getGroundplan().getPlanValue()-getPenalty(nextplan);
+		optimalplan=currentplan;
 		for(int i=0;i<=maxiter;i++)
 		{
 			springembedding.springEmbed(nextplan);
 			
 			//bereken startCurrentValue en startNextValue (deze zijn nodig voor berekenen T)
 			
-			nextvalue=nextplan.getGroundplan().getPlanValue()-getPenalty();
+			nextvalue=nextplan.getGroundplan().getPlanValue()-getPenalty(nextplan);
 			
 			//Print every solution of spring embedding algorithm
 			printSolution(frame);
@@ -67,7 +68,7 @@ public class SimulatedAnnealing {
 			}
 			else
 			{
-				if(determineAcception(currentvalue, nextvalue))
+				if(determineAcception(currentvalue, nextvalue)){}
 					cloneGroundPlans(nextvalue);
 			}
 			//Tuple.hookefactor+=0.01;
@@ -76,8 +77,8 @@ public class SimulatedAnnealing {
 	}
 
 	private void printSolution(GroundplanFrame frame) {
-		frame.setPlan(nextplan.getGroundplan());
-		System.out.println("Value: "+nextplan.getGroundplan().getPlanValue()+" feasible: "+nextplan.getGroundplan().isValid());
+		frame.setPlan(optimalplan.getGroundplan());
+		System.out.println("Value: "+optimalplan.getGroundplan().getPlanValue()+" feasible: "+optimalplan.getGroundplan().isValid());
 	}
 		
 	//Sets the charges of the vertices
@@ -93,14 +94,14 @@ public class SimulatedAnnealing {
 		}
 	}
 
-	private double getPenalty() {
+	private double getPenalty(Graph plan) {
 		double penalty=0;
 		
-		if(nextplan.getGroundplan().isValid())
+		if(plan.getGroundplan().isValid())
 			return penalty;
-		for(Vertex v:nextplan.getVertices())
+		for(Vertex v:plan.getVertices())
 		{
-			if(!nextplan.getGroundplan().isCorrectlyPlaced(v.getPlaceable()))
+			if(!plan.getGroundplan().isCorrectlyPlaced(v.getPlaceable()))
 				penalty+=1000000;
 		}
 		return penalty;
@@ -111,9 +112,12 @@ public class SimulatedAnnealing {
 	}
 
 	private void cloneGroundPlans(double nextValue) {
-		if(nextValue>optimalplan.getGroundplan().getPlanValue())
-			optimalplan=nextplan.clone();
-		currentplan=nextplan.clone();
+		if(nextplan.getGroundplan().isValid())
+		{
+			if(nextValue>optimalplan.getGroundplan().getPlanValue())
+				optimalplan=nextplan.clone();
+			currentplan=nextplan.clone();
+		}
 	}
 
 

@@ -196,7 +196,7 @@ public class DistrictGenerator {
 		}
 		plan.addWaterBody(new WaterBody(70,0,30,40));
 		plan.addWaterBody(new WaterBody(0,70,33,40));
-		plan.addWaterBody(new WaterBody(Groundplan.WIDTH-40,70,40,33));
+		plan.addWaterBody(new WaterBody(Groundplan.WIDTH-40,90,40,33));
 		return plan;
 	}
 		
