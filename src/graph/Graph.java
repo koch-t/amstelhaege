@@ -80,9 +80,9 @@ public class Graph{
 		for (Residence r: plan.getResidences()){
 			vertices.add(new Vertex(r));
 		}
-		for (WaterBody w: plan.getWaterBodies()){
+		/*for (WaterBody w: plan.getWaterBodies()){
 			vertices.add(new Vertex(w));
-		}
+		}*/
 		return vertices;
 	}
 
