@@ -32,7 +32,7 @@ public class DistrictPlanner {
 	public DistrictPlanner() {
 		random = new Random(1);
 		frame = new GroundplanFrame();
-		int houses=40;
+		int houses=20;
 		Groundplan plan= new Groundplan(houses);
 		generator = new DistrictGenerator(plan,houses);
 		plan =planWijk(houses,10000);
@@ -58,10 +58,10 @@ public class DistrictPlanner {
 		int infeasiblesolutions=0;
 		Groundplan optimalSolution=null;
 		double bestsolution=0;
-		Charges charges = new Charges(0.001,0.003,0.00005,0,0);
+		Charges charges = new Charges(2,3,5,0,0.00000001);
 		Groundplan currentSolution=null;
 		
-		algorithm = new SimulatedAnnealing(generator.generateDistrict1());
+		algorithm = new SimulatedAnnealing(generator.generateDistrict3());
 		optimalSolution=algorithm.getGroundplan();
 			//Calc initial solution:
 			Tuple.hookefactor=1;

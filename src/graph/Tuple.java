@@ -34,6 +34,11 @@ public class Tuple implements Cloneable{
 
 	public static Tuple coulombRepulsion(Vertex pThis, Vertex pOther,double distance) {
 		double s = 1.0 / Math.pow(distance,2);
+		//hack:
+		if(pOther.getPlaceable()==null || pThis.getPlaceable()==null)
+		{
+			s = 1.0 / Math.pow(distance,2);
+		}
 		double productcharge = pThis.getMass()*pOther.getMass();
 		return new Tuple(((pOther.getPosition().dx - pThis.getPosition().dx)*productcharge) / s * coulombfactor, ((pOther.getPosition().dy - pThis.getPosition().dy)*productcharge) / s * coulombfactor);
 	}
