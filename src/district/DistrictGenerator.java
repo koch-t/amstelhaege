@@ -106,6 +106,51 @@ public class DistrictGenerator {
 		
 	}
 	
+	public Groundplan generateDistrict3()
+	{
+		plan = new Groundplan(houses);
+		int j=0;
+		int k=0;
+		createWaterInCorners(plan);
+		for(int i=0;i<Groundplan.MINIMUM_COTTAGE_PERCENTAGE*houses;i++)
+		{
+			plan.addResidence(new Cottage(2+10*k,2+10*j));
+			k++;
+			if(i!=0 && i%6==0)
+			{
+				j++;
+				k=0;
+			}
+		}
+
+		j=3;
+		k=0;
+		for(int i=0;i<Groundplan.MINIMUM_BUNGALOW_PERCENTAGE*houses;i++)
+		{
+
+			plan.addResidence(new Bungalow(Groundplan.WIDTH-3-13*k,j));
+			k++;
+			if(i==4 || i==9) {
+				j+=10.5;
+				k=0;
+			}
+		}
+		
+		j=6;
+		k=0;
+		for(int i=0;i<Groundplan.MINIMUM_MANSION_PERCENTAGE*houses;i++)
+		{
+			plan.addResidence(new Mansion(Groundplan.WIDTH-6-17*k,Groundplan.HEIGHT-j));
+			k++;
+			if(i==3 || i==6){
+				j+=16.5;
+				k=0;
+			}
+		}
+		return plan;
+		
+	}
+	
 	//Clustering residences
 	public Groundplan generateDistrict1()
 	{

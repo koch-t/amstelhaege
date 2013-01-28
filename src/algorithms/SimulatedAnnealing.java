@@ -112,12 +112,9 @@ public class SimulatedAnnealing {
 	}
 
 	private void cloneGroundPlans(double nextValue) {
-		if(nextplan.getGroundplan().isValid())
-		{
 			if(nextValue>optimalplan.getGroundplan().getPlanValue())
 				optimalplan=nextplan.clone();
 			currentplan=nextplan.clone();
-		}
 	}
 
 

@@ -32,10 +32,10 @@ public class DistrictPlanner {
 	public DistrictPlanner() {
 		random = new Random(1);
 		frame = new GroundplanFrame();
-		int houses=20;
+		int houses=40;
 		Groundplan plan= new Groundplan(houses);
 		generator = new DistrictGenerator(plan,houses);
-		plan =planWijk(houses,1000);
+		plan =planWijk(houses,10000);
 		//printStartDistricts();
 		printSolution(plan);
 		
