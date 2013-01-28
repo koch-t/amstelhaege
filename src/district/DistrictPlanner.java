@@ -32,10 +32,10 @@ public class DistrictPlanner {
 	public DistrictPlanner() {
 		random = new Random(1);
 		frame = new GroundplanFrame();
-		int houses=60;
+		int houses=20;
 		Groundplan plan= new Groundplan(houses);
 		generator = new DistrictGenerator(plan,houses);
-		plan = planWijk(houses,10000);
+		plan =planWijk(houses,10000);
 		//printStartDistricts();
 		printSolution(plan);
 		
@@ -46,7 +46,9 @@ public class DistrictPlanner {
 	{
 		printSolution(generator.generateDistrict1());
 		printSolution(generator.generateDistrict2());
-		printSolution(generator.generateFlat());
+		printSolution(generator.generateRandomMapFixedWater());
+		System.out.println(generator.generateDistrict2().isValid());
+	//	printSolution(generator.generateFlat());
 	}
 
 	/**
@@ -56,7 +58,7 @@ public class DistrictPlanner {
 		int infeasiblesolutions=0;
 		Groundplan optimalSolution=null;
 		double bestsolution=0;
-		Charges charges = new Charges(0,2,5,0,0);
+		Charges charges = new Charges(1,2,5,0,0);
 		Groundplan currentSolution=null;
 		
 		algorithm = new SimulatedAnnealing(generator.generateDistrict2());
@@ -65,16 +67,18 @@ public class DistrictPlanner {
 			Tuple.hookefactor=1;
 			currentSolution=algorithm.getOptimalSolution(iter,charges,frame);
 			printSolution(currentSolution);		
-			
-			currentSolution = runSimulatedAnnealingChangingCharge(houses,
-					infeasiblesolutions, charges, currentSolution,iter);
-			if(currentSolution.isValid() && currentSolution.getPlanValue()>optimalSolution.getPlanValue())
+			while(!optimalSolution.isValid())
 			{
-				optimalSolution=currentSolution;
-				bestsolution=optimalSolution.getPlanValue();
-				System.out.println("Best value: "+bestsolution);
+				currentSolution = runSimulatedAnnealingChangingCharge(houses,
+					infeasiblesolutions, charges, currentSolution,iter);
+				if(currentSolution.isValid() && currentSolution.getPlanValue()>optimalSolution.getPlanValue())
+				{
+					optimalSolution=currentSolution;
+					bestsolution=optimalSolution.getPlanValue();
+					System.out.println("Best value: "+bestsolution);
+				}
 			}
-		return currentSolution;
+		return optimalSolution;
 	}
 
 	private Groundplan runSimulatedAnnealingChangingCharge(int houses,
@@ -84,7 +88,7 @@ public class DistrictPlanner {
 		Groundplan solution;
 		
 			//run x iterations of simulated annealing algorithm
-		algorithm = new SimulatedAnnealing(generator.generateDistrict2());
+		algorithm = new SimulatedAnnealing(currentSolution);
 		printSolution(currentSolution);
 			
 		solution= algorithm.getOptimalSolution(iter,charges,frame);
@@ -95,7 +99,7 @@ public class DistrictPlanner {
 
 	private void printSolution(Groundplan solution) {
 		frame.setPlan(solution);
-		//System.out.println("Value: "+solution.getPlanValue()+" Feasible:"+solution.isValid());
+		System.out.println("best Value: "+solution.getPlanValue()+" Feasible:"+solution.isValid()+"Vrijstand: "+solution.getPlanCummulativeDistance());
 	}
 
 	private void increaseCharges(Charges charges) {

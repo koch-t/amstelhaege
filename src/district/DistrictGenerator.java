@@ -23,7 +23,7 @@ public class DistrictGenerator {
 	public Groundplan generateRandomMap()
 	{
 		plan = new Groundplan(houses);
-		for (int i = 0; i < Groundplan.MINIMUM_COTTAGE_PERCENTAGE * 20 -2; i++) {
+		for (int i = 0; i < Groundplan.MINIMUM_COTTAGE_PERCENTAGE * 20; i++) {
 			plan.addResidence(new Cottage(random.nextDouble()
 					* Groundplan.WIDTH, random.nextDouble() * Groundplan.HEIGHT));
 		}
@@ -159,7 +159,7 @@ public class DistrictGenerator {
 		plan = new Groundplan(houses);
 		int j=0;
 		int k=0;
-		for(int i=1;i<Groundplan.MINIMUM_COTTAGE_PERCENTAGE*houses;i++)
+		for(int i=1;i<=Groundplan.MINIMUM_COTTAGE_PERCENTAGE*houses;i++)
 		{
 			plan.addResidence(new Cottage(2+10*k,2+10*j));
 			k++;
@@ -194,9 +194,9 @@ public class DistrictGenerator {
 				k=0;
 			}
 		}
-		plan.addWaterBody(new WaterBody(60,0,35,40));
-		plan.addWaterBody(new WaterBody(0,60,30.5,40));
-		plan.addWaterBody(new WaterBody(Groundplan.WIDTH-40,60,40,30.5));
+		plan.addWaterBody(new WaterBody(70,0,30,40));
+		plan.addWaterBody(new WaterBody(0,70,33,40));
+		plan.addWaterBody(new WaterBody(Groundplan.WIDTH-40,70,40,33));
 		return plan;
 	}
 		
