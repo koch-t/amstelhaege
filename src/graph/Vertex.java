@@ -1,5 +1,8 @@
 package graph;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 import districtobjects.Placeable;
 
 /**
@@ -14,30 +17,12 @@ public class Vertex implements Cloneable{
     private Tuple velocity;
     private Tuple position;
     private double mass;
-    private Vertex clone; //A Clone of this object
-    private Vertex toVertex;
     private double distance;
-    
+    private ArrayList<Neighbour> neighbours = new ArrayList<Neighbour>();
     public boolean iscloned;
     public boolean isfixed;
-        
-    @Override
-    public Vertex clone(){
-    	Vertex clone = new Vertex(this.p,isfixed);
-    	clone.velocity = velocity.clone();
-    	clone.isfixed=isfixed;
-    	clone.mass=this.mass;
-    	iscloned=true;
-    	this.clone =clone; 
-    	if(toVertex!=null)
-    	{
-	    	if(!toVertex.iscloned)
-	    		clone.toVertex=toVertex.clone(); //Going into recursion
-	    	else clone.toVertex=toVertex.clone;
-    	}
-    	return clone;
-    }
-    
+
+      
     public Vertex(Placeable p){
     	this(p,false);
     }
@@ -51,21 +36,7 @@ public class Vertex implements Cloneable{
     public Vertex(boolean isfixed){
     	this(null,true);
     }
-    
-    /**
-     * @return the edge defining the nearest neighbour.
-     */       
-    public Vertex getToVertex(){
-    	return toVertex;
-    }
- 
-    /**
-     * Set the nearest neighbour relation (directed)
-     */
-    public void setToVertex(Vertex toVertex, double distance){
-    	this.toVertex = toVertex;
-    }
-    
+
     /**
      * @return Veolicty of the vertex
      */
@@ -122,5 +93,23 @@ public class Vertex implements Cloneable{
 
 	public void setDistance(double distance) {
 		this.distance = distance;
+	}
+
+	public ArrayList<Neighbour> getNeighbours() {
+		return neighbours;
+	}
+
+	public void setNeighbours(ArrayList<Neighbour> neighbours) {
+		this.neighbours = neighbours;
+	}
+	
+	public ArrayList<Vertex>getKNearestNeighbours(int k){
+		Collections.sort(this.neighbours);
+		ArrayList<Vertex> neighbours = new ArrayList<Vertex>(k);
+		for (int i = 0; i < k && i < this.neighbours.size(); i++){
+			Neighbour n = this.neighbours.get(i);
+			neighbours.add(n.neighbour);
+		}
+		return neighbours;
 	}
 }

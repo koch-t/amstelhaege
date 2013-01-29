@@ -3,8 +3,6 @@ package graph;
 import java.util.ArrayList;
 
 import district.Groundplan;
-import districtobjects.Bungalow;
-import districtobjects.Cottage;
 import districtobjects.Ground;
 import districtobjects.Residence;
 import districtobjects.WaterBody;
@@ -58,31 +56,32 @@ public class Graph{
 	public ArrayList<Vertex> setNearestNeighbours(){
 		Vertex wall = new Vertex(true);
 		for (Vertex v1 : vertices){
-			Vertex nearest = wall;
-			double distance = distanceToWall(v1);
+			ArrayList<Neighbour> neighbours = new ArrayList<Neighbour>(vertices.size());
+			Neighbour n = new Neighbour();
+			n.distance = distanceToWall(v1);
+			n.neighbour = wall;
+			neighbours.add(n);
 			for (Vertex v2 : vertices){
 				if (v1 == v2)
 					continue;
-				double curdist = distanceBetween(v1, v2);
-				if (curdist < distance){
-					nearest = v2;
-					distance = curdist;
-				}
+				n = new Neighbour();
+				n.distance =  distanceBetween(v1, v2);
+				n.neighbour = v2;
+				neighbours.add(n);
 			}
-			v1.setToVertex(nearest,distance);
+			v1.setNeighbours(neighbours);
 		}
 		return vertices;
 	}
 	
 	public ArrayList<Vertex> buildGraph(Groundplan plan){
-		double mass;
 		ArrayList<Vertex> vertices = new ArrayList<Vertex>(100);
 		for (Residence r: plan.getResidences()){
 			vertices.add(new Vertex(r));
 		}
-		/*for (WaterBody w: plan.getWaterBodies()){
+		for (WaterBody w: plan.getWaterBodies()){
 			vertices.add(new Vertex(w));
-		}*/
+		}
 		return vertices;
 	}
 
@@ -93,38 +92,25 @@ public class Graph{
 	public void setVertices(ArrayList<Vertex> vertices) {
 		this.vertices = vertices;
 	}
-	
 	public Graph clone()
 	{
-		ArrayList<Vertex> clonelist = new ArrayList<Vertex>();
-		
 		Graph clone = new Graph(plan.clone());
-		for(Vertex v:vertices)
-		{
-			if(!v.iscloned)
-			{
-				cloneV(clonelist, v);
-			}
-		}
-		clone.vertices=clonelist;
-		changeVertexCloneState(clone,false);
 		return clone;
 	}
-	
 
-	
+	/*
 	private void changeVertexCloneState(Graph clone, boolean b) {
 		for(Vertex v:vertices)
 			v.iscloned=false;
 		for(Vertex v:clone.vertices)
 			v.iscloned=false;
 	}
-
+*/
 	public Groundplan getGroundplan()
 	{
 		return plan;
 	}
-	
+	/*
 	private void cloneV(ArrayList<Vertex> clonelist, Vertex v) {
 		Vertex cloneofv;
 		
@@ -138,6 +124,6 @@ public class Graph{
 		if(cloneofv.isfixed)
 			clonelist.remove(cloneofv);
 			
-	}
+	}*/
 }
 

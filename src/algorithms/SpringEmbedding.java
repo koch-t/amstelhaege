@@ -10,24 +10,24 @@ import java.util.Random;
 import district.Groundplan;
 import districtobjects.Placeable;
 import districtobjects.Residence;
-import districtobjects.WaterBody;
 
 public class SpringEmbedding {
 
 	public final double DAMPING = 0.005;
 	public final double TIMESTEP = 1;
+	public final static int KNEAREST = 2;
 	Random random;
-	
+
 	public SpringEmbedding()
 	{
 		random = new Random(1);
 	}
 
 	public void springEmbed(Graph g){
-		
+
 		ArrayList<Vertex> vertices = g.getVertices();
 		Tuple total_kinetic_energy = new Tuple();
-		
+
 		for (Vertex v : vertices){
 			Tuple netto_sum = new Tuple();
 
@@ -46,8 +46,10 @@ public class SpringEmbedding {
 			 *   net-force := net-force + Hooke_attraction( this_node, spring )
 			 *   next spring
 			 */
-			getWallPosition(g,v.getToVertex(),v);
-			netto_sum.sum((Tuple.hookeAttraction(v,v.getToVertex())));
+			for (Vertex n : v.getKNearestNeighbours(KNEAREST)){
+				getWallPosition(g,n,v);
+				netto_sum.sum((Tuple.hookeAttraction(v,n)));
+			}
 			//v.velocity := (v.velocity + timestep * net-force) * damping
 			v.getVelocity().dx = (v.getVelocity().dx + TIMESTEP * netto_sum.dx) * DAMPING;
 			v.getVelocity().dy = (v.getVelocity().dy + TIMESTEP * netto_sum.dy) * DAMPING;
@@ -62,9 +64,9 @@ public class SpringEmbedding {
 			//total_kinetic_energy := total_kinetic_energy + this_node.mass * (this_node.velocity)^2
 			total_kinetic_energy.dx =  total_kinetic_energy.dx + (v.getMass() * Math.sqrt(v.getVelocity().dx));
 			total_kinetic_energy.dy =  total_kinetic_energy.dy+ (v.getMass() * Math.sqrt(v.getVelocity().dy));
-			
+
 			vertices= g.setNearestNeighbours();
-		
+
 		}		
 	}
 
@@ -75,7 +77,7 @@ public class SpringEmbedding {
 			if(v.getPosition().equals(v2.getPosition()))
 				v.setPosition(new Tuple(v.getPosition().dx+1,v.getPosition().dy));
 		}
-		
+
 	}
 
 	private void bounce(Vertex v,Graph graph) {
@@ -91,7 +93,7 @@ public class SpringEmbedding {
 			v.getPlaceable().setY(v.getPosition().dy - (TIMESTEP * v.getVelocity().dy));
 		}
 	}
-	
+
 	private void bounceFromWall(Vertex v) {
 		Placeable p = v.getPlaceable();
 		if(p instanceof Residence)
@@ -115,7 +117,7 @@ public class SpringEmbedding {
 
 	private void bounceResidenceFromWall(Placeable p) {
 		Residence r=(Residence)p;
-		
+
 		if(r.getX()-r.getMinimumDistance()<0)
 			r.setX(r.getMinimumDistance());
 		if(r.getX()+r.getWidth()+r.getMinimumDistance()>Groundplan.WIDTH)
