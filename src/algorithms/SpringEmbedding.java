@@ -58,6 +58,7 @@ public class SpringEmbedding {
 			{
 				v.getPlaceable().setX(v.getPosition().dx + (TIMESTEP * v.getVelocity().dx));
 				v.getPlaceable().setY(v.getPosition().dy + (TIMESTEP * v.getVelocity().dy));
+				//calc nearest neighbour
 				removeStack(v, vertices);
 				bounce(v,g);
 			}
@@ -126,6 +127,7 @@ public class SpringEmbedding {
 			r.setY(r.getMinimumDistance());
 		if(r.getY()+r.getHeight()+r.getMinimumDistance()>Groundplan.HEIGHT)
 			r.setY(Groundplan.HEIGHT-r.getMinimumDistance()-r.getHeight());
+			
 	}
 
 	private void getWallPosition(Graph g, Vertex v, Vertex v_other) {

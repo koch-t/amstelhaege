@@ -114,7 +114,7 @@ public class DistrictGenerator {
 		createWaterInCorners(plan);
 		for(int i=0;i<Groundplan.MINIMUM_COTTAGE_PERCENTAGE*houses;i++)
 		{
-			plan.addResidence(new Cottage(2+10*k,2+10*j));
+			plan.addResidence(new Cottage(10*k,20+10*j));
 			k++;
 			if(i!=0 && i%6==0)
 			{
@@ -128,7 +128,7 @@ public class DistrictGenerator {
 		for(int i=0;i<Groundplan.MINIMUM_BUNGALOW_PERCENTAGE*houses;i++)
 		{
 
-			plan.addResidence(new Bungalow(Groundplan.WIDTH-3-13*k,j));
+			plan.addResidence(new Bungalow(Groundplan.WIDTH-3-13*k,j+20));
 			k++;
 			if(i==4 || i==9) {
 				j+=10.5;
@@ -140,7 +140,7 @@ public class DistrictGenerator {
 		k=0;
 		for(int i=0;i<Groundplan.MINIMUM_MANSION_PERCENTAGE*houses;i++)
 		{
-			plan.addResidence(new Mansion(Groundplan.WIDTH-6-17*k,Groundplan.HEIGHT-j));
+			plan.addResidence(new Mansion(Groundplan.WIDTH-6-17*k,Groundplan.HEIGHT-j-20));
 			k++;
 			if(i==3 || i==6){
 				j+=16.5;

@@ -22,12 +22,11 @@ public class Graph{
 		if (v.getPosition() == null){
 			return 0;
 		}
-		double distance = 0.0;
+		double distance;
 		Ground ground  = plan.getGround();
-		distance = Math.max(distance,v.getPlaceable().rightEdge() - ground.rightEdge());
-		distance = Math.max(distance,v.getPlaceable().leftEdge() - ground.leftEdge());
-		distance = Math.max(distance,v.getPlaceable().topEdge() - ground.topEdge());
-		distance = Math.max(distance,v.getPlaceable().bottomEdge() - ground.bottomEdge());
+		distance = Math.min(ground.rightEdge()-v.getPlaceable().rightEdge(),v.getPlaceable().leftEdge() - ground.leftEdge());
+		distance = Math.min(distance,v.getPlaceable().topEdge() - ground.topEdge());
+		distance = Math.min(distance,ground.bottomEdge()-v.getPlaceable().bottomEdge());
 		return distance;
 	}
 	
@@ -42,11 +41,11 @@ public class Graph{
 	
 	public Tuple wallPosition(Vertex v) throws Exception
 	{
-		if(distanceToWall(v)+v.getPlaceable().getX()==120)
+		if(distanceToWall(v)+v.getPlaceable().getX()==Groundplan.WIDTH)
 			return new Tuple(120,v.getPlaceable().getY());
 		else if(v.getPlaceable().getX()-distanceToWall(v)==0)
 			return new Tuple(0,v.getPlaceable().getY());
-		else if(v.getPlaceable().getY()+distanceToWall(v)==160)
+		else if(v.getPlaceable().getY()+distanceToWall(v)==Groundplan.HEIGHT)
 			return new Tuple(v.getPlaceable().getX(),160);
 		else if(v.getPlaceable().getY()-distanceToWall(v)==0)
 			return new Tuple(v.getPlaceable().getX(),160);
