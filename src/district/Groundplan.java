@@ -1,10 +1,7 @@
 package district;
 import java.util.ArrayList;
 
-import districtobjects.Ground;
-import districtobjects.Placeable;
-import districtobjects.Residence;
-import districtobjects.WaterBody;
+import districtobjects.*;
 
 /**
  * Eisen aan de wijk
@@ -43,13 +40,30 @@ public class Groundplan {
 	}
 
 	@SuppressWarnings("unchecked")
-	public Groundplan clone()
+	public Groundplan clone() throws CloneNotSupportedException
 	{
 		Groundplan cloneofplan = new Groundplan(nHouses);
 		cloneofplan.nCottages=nCottages;
 		cloneofplan.nBungalows=nBungalows;
 		cloneofplan.nMansions=nMansions;
-		cloneofplan.residences =(ArrayList<Residence>) residences.clone();
+		for(Residence r: residences)
+		{
+			if(r instanceof Cottage)
+			{
+				Cottage r2 = (Cottage)r;
+				cloneofplan.addResidence(r2.clone());
+			}
+			else if(r instanceof Bungalow)
+			{
+				Bungalow r2 = (Bungalow)r;
+				cloneofplan.addResidence(r2.clone());
+			}
+			else if(r instanceof Mansion)
+			{
+				Mansion r2 = (Mansion)r;
+				cloneofplan.addResidence(r2.clone());
+			}
+		}
 		cloneofplan.waterBodies = (ArrayList<WaterBody>)waterBodies.clone();
 		return cloneofplan;
 	}
@@ -192,7 +206,7 @@ public class Groundplan {
 		}
 		return false;
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	public ArrayList<Residence> getResidences(){
 		return (ArrayList<Residence>) residences.clone();
@@ -227,7 +241,10 @@ public class Groundplan {
 			if(isCorrectlyPlaced(residence)){
 				value += getValueDistance(residence);
 			}
-			value += getValueDistance(residence);
+			else
+			{
+				value+=getValueDistance(residence);
+			}
 		}
 		return value;
 	}

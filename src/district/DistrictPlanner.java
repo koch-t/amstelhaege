@@ -1,6 +1,8 @@
 package district;
 import graph.Tuple;
 
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.util.Random;
 
 import algorithms.SimulatedAnnealing;
@@ -32,7 +34,7 @@ public class DistrictPlanner {
 	public DistrictPlanner() {
 		random = new Random(1);
 		frame = new GroundplanFrame();
-		int houses=60;
+		int houses=20;
 		Groundplan plan= new Groundplan(houses);
 		generator = new DistrictGenerator(plan,houses);
 		plan = planWijk(houses,10000);
@@ -44,9 +46,7 @@ public class DistrictPlanner {
 	/** Used for testing*/
 	public void printStartDistricts()
 	{
-		printSolution(generator.generateDistrict1());
-		printSolution(generator.generateDistrict2());
-		printSolution(generator.generateFlat());
+		printSolution(generator.generateDistrict3());
 	}
 
 	/**
@@ -56,46 +56,50 @@ public class DistrictPlanner {
 		int infeasiblesolutions=0;
 		Groundplan optimalSolution=null;
 		double bestsolution=0;
-		Charges charges = new Charges(0,2,5,0,0);
+		Charges charges = new Charges(1,2,5,0,0);
 		Groundplan currentSolution=null;
 		
-		algorithm = new SimulatedAnnealing(generator.generateDistrict2());
+		algorithm = new SimulatedAnnealing(generator.generateDistrict3());
 		optimalSolution=algorithm.getGroundplan();
 			//Calc initial solution:
-			Tuple.hookefactor=1;
-			currentSolution=algorithm.getOptimalSolution(iter,charges,frame);
-			printSolution(currentSolution);		
-			
-			currentSolution = runSimulatedAnnealingChangingCharge(houses,
-					infeasiblesolutions, charges, currentSolution,iter);
-			if(currentSolution.isValid() && currentSolution.getPlanValue()>optimalSolution.getPlanValue())
-			{
-				optimalSolution=currentSolution;
-				bestsolution=optimalSolution.getPlanValue();
-				System.out.println("Best value: "+bestsolution);
-			}
-		return currentSolution;
+			Tuple.hookefactor=1;		
+		do 
+		{
+				
+				currentSolution = runSimulatedAnnealingChangingCharge(houses,
+						infeasiblesolutions, charges, currentSolution,iter,algorithm.getGroundplan());
+				if(currentSolution.getPlanCummulativeDistance()>optimalSolution.getPlanCummulativeDistance())
+				{
+					try {
+						optimalSolution=currentSolution.clone();
+					} catch (CloneNotSupportedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					bestsolution=optimalSolution.getPlanCummulativeDistance();
+					System.out.println("Best value: "+bestsolution);
+				}
+			}while(!optimalSolution.isValid());
+		return optimalSolution;
 	}
 
 	private Groundplan runSimulatedAnnealingChangingCharge(int houses,
 			int infeasiblesolutions, Charges charges,
-			Groundplan currentSolution,int iter) {
+			Groundplan currentSolution,int iter,Groundplan plan) {
 		
 		Groundplan solution;
 		
 			//run x iterations of simulated annealing algorithm
-		algorithm = new SimulatedAnnealing(generator.generateDistrict2());
-		printSolution(currentSolution);
-			
+		algorithm = new SimulatedAnnealing(plan);			
 		solution= algorithm.getOptimalSolution(iter,charges,frame);
 			
 		printSolution(solution);
-		return currentSolution;
+		return solution;
 	}
 
 	private void printSolution(Groundplan solution) {
 		frame.setPlan(solution);
-		//System.out.println("Value: "+solution.getPlanValue()+" Feasible:"+solution.isValid());
+		System.out.println("Totale vrijstand: "+solution.getPlanCummulativeDistance()+" Feasible:"+solution.isValid()+" Value:"+solution.getPlanValue());
 	}
 
 	private void increaseCharges(Charges charges) {

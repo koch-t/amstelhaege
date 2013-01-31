@@ -10,6 +10,7 @@ import java.util.Random;
 import district.Groundplan;
 import districtobjects.Placeable;
 import districtobjects.Residence;
+import districtobjects.*;
 import districtobjects.WaterBody;
 
 public class SpringEmbedding {
@@ -35,6 +36,10 @@ public class SpringEmbedding {
 			 * net-force := net-force + Coulomb_repulsion( this_node, other_node )
 			 * next node
 			 */
+			if(v.getPlaceable() instanceof Mansion)
+			{
+				getWallPosition(g,v.getToVertex(),v);
+			}
 			for (Vertex v_other : vertices){
 				if (v_other == v)
 					continue;
@@ -46,6 +51,7 @@ public class SpringEmbedding {
 			 *   net-force := net-force + Hooke_attraction( this_node, spring )
 			 *   next spring
 			 */
+
 			getWallPosition(g,v.getToVertex(),v);
 			netto_sum.sum((Tuple.hookeAttraction(v,v.getToVertex())));
 			//v.velocity := (v.velocity + timestep * net-force) * damping
@@ -73,30 +79,31 @@ public class SpringEmbedding {
 		{
 			if(v==v2) continue;
 			if(v.getPosition().equals(v2.getPosition()))
-				v.setPosition(new Tuple(v.getPosition().dx+1,v.getPosition().dy));
+				v.setPosition(new Tuple(v.getPosition().dx+20,v.getPosition().dy+20));
 		}
 		
 	}
 
 	private void bounce(Vertex v,Graph graph) {
 		bounceOutOfWater(v, graph);
-		bounceFromWall(v);
+		bounceFromWall(v,graph);
 	}
 
 	private void bounceOutOfWater(Vertex v, Graph graph) {
-		while(graph.getGroundplan().intersectsWithWater(v.getPlaceable()))
-		{
-			//Set v to old position
+		if(graph.getGroundplan().intersectsWithWater(v.getPlaceable()))
 			v.getPlaceable().setX(v.getPosition().dx - (TIMESTEP * v.getVelocity().dx));
+		if(graph.getGroundplan().intersectsWithWater(v.getPlaceable()))
+		{
+			v.getPlaceable().setX(v.getPosition().dx + (TIMESTEP * v.getVelocity().dx));
 			v.getPlaceable().setY(v.getPosition().dy - (TIMESTEP * v.getVelocity().dy));
 		}
 	}
 	
-	private void bounceFromWall(Vertex v) {
+	private void bounceFromWall(Vertex v,Graph g) {
 		Placeable p = v.getPlaceable();
 		if(p instanceof Residence)
 		{
-			bounceResidenceFromWall(p);
+			bounceResidenceFromWall(g,v);
 		}
 		else
 			bounceWaterFromWall(p);
@@ -113,9 +120,8 @@ public class SpringEmbedding {
 			p.setY(Groundplan.HEIGHT-p.getHeight());
 	}
 
-	private void bounceResidenceFromWall(Placeable p) {
-		Residence r=(Residence)p;
-		
+	private void bounceResidenceFromWall(Graph graph,Vertex v) {
+		Residence r=(Residence)v.getPlaceable();
 		if(r.getX()-r.getMinimumDistance()<0)
 			r.setX(r.getMinimumDistance());
 		if(r.getX()+r.getWidth()+r.getMinimumDistance()>Groundplan.WIDTH)

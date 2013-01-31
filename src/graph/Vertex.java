@@ -1,5 +1,8 @@
 package graph;
 
+import districtobjects.Bungalow;
+import districtobjects.Cottage;
+import districtobjects.Mansion;
 import districtobjects.Placeable;
 
 /**
@@ -22,10 +25,25 @@ public class Vertex implements Cloneable{
     public boolean isfixed;
         
     @Override
-    public Vertex clone(){
+    public Vertex clone() throws CloneNotSupportedException{
     	Vertex clone = new Vertex(this.p,isfixed);
     	clone.velocity = velocity.clone();
     	clone.isfixed=isfixed;
+		if(p instanceof Cottage)
+		{
+			Cottage r2 = (Cottage)p;
+			clone.p=r2.clone();
+		}
+		else if(p instanceof Bungalow)
+		{
+			Bungalow r2 = (Bungalow)p;
+			clone.p=r2.clone();
+		}
+		else if(p instanceof Mansion)
+		{
+			Mansion r2 = (Mansion)p;
+			clone.p=r2.clone();
+		}
     	clone.mass=this.mass;
     	iscloned=true;
     	this.clone =clone; 

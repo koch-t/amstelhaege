@@ -20,6 +20,8 @@ public class Graph{
 		setNearestNeighbours();
 	}
 	
+	public Graph(){}
+	
 	public double distanceToWall(Vertex v){
 		if (v.getPosition() == null){
 			return 0;
@@ -94,11 +96,16 @@ public class Graph{
 		this.vertices = vertices;
 	}
 	
-	public Graph clone()
+	/*public Graph clone()
 	{
 		ArrayList<Vertex> clonelist = new ArrayList<Vertex>();
-		
-		Graph clone = new Graph(plan.clone());
+		Graph clone = new Graph();
+		try {
+			clone = new Graph(plan.clone());
+		} catch (CloneNotSupportedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		for(Vertex v:vertices)
 		{
 			if(!v.iscloned)
@@ -109,7 +116,7 @@ public class Graph{
 		clone.vertices=clonelist;
 		changeVertexCloneState(clone,false);
 		return clone;
-	}
+	}*/
 	
 
 	
@@ -125,10 +132,15 @@ public class Graph{
 		return plan;
 	}
 	
-	private void cloneV(ArrayList<Vertex> clonelist, Vertex v) {
-		Vertex cloneofv;
+	/*private void cloneV(ArrayList<Vertex> clonelist, Vertex v) {
+		Vertex cloneofv = null;
 		
-		cloneofv=v.clone();
+		try {
+			cloneofv=v.clone();
+		} catch (CloneNotSupportedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		while(!clonelist.contains(cloneofv))
 		{
 			clonelist.add(cloneofv);
@@ -138,6 +150,6 @@ public class Graph{
 		if(cloneofv.isfixed)
 			clonelist.remove(cloneofv);
 			
-	}
+	}*/
 }
 

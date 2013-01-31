@@ -5,6 +5,7 @@ import java.util.Random;
 import districtobjects.Bungalow;
 import districtobjects.Cottage;
 import districtobjects.Mansion;
+import districtobjects.Residence;
 import districtobjects.WaterBody;
 
 public class DistrictGenerator {
@@ -16,7 +17,7 @@ public class DistrictGenerator {
 	{
 		this.plan = plan;
 		this.houses=houses;
-		random = new Random(1);
+		random = new Random(10);
 	}
 	
 	//Random generation of Groundplan
@@ -45,6 +46,50 @@ public class DistrictGenerator {
 		return plan;
 	}
 	
+	public Groundplan generateDistrict3()
+	{
+		plan = new Groundplan(houses);
+		int j=0;
+		int k=0;
+		for(int i=0;i<Groundplan.MINIMUM_COTTAGE_PERCENTAGE*houses;i++)
+		{
+			plan.addResidence(new Cottage(2+10*k,2+10*j+20));
+			k++;
+			if(i!=0 && i%6==0)
+			{
+				j++;
+				k=0;
+			}
+		}
+
+		j=3;
+		k=0;
+		for(int i=0;i<Groundplan.MINIMUM_BUNGALOW_PERCENTAGE*houses;i++)
+		{
+
+			plan.addResidence(new Bungalow(Groundplan.WIDTH-20-13*k,j+20));
+			k++;
+			if(i==4 || i==9) {
+				j+=10.5;
+				k=0;
+			}
+		}
+		
+		j=6;
+		k=0;
+		for(int i=0;i<Groundplan.MINIMUM_MANSION_PERCENTAGE*houses;i++)
+		{
+			plan.addResidence(new Mansion(Groundplan.WIDTH-25-17*k,Groundplan.HEIGHT-j-20));
+			k++;
+			if(i==3 || i==6){
+				j+=16.5;
+				k=0;
+			}
+		}
+		createWaterInCorners(plan);
+		return plan;
+	}
+	
 	//Generates a map with water in the corner
 	public Groundplan generateRandomMapFixedWater()
 	{
@@ -65,12 +110,62 @@ public class DistrictGenerator {
 			}
 			
 			createWaterInCorners(plan);		
-			
+			for(Residence r: plan.getResidences())
+			{
+				while(plan.intersectsWithWater(r))
+				{
+					r.setX(random.nextDouble()*Groundplan.WIDTH);
+					r.setY(random.nextDouble()*Groundplan.HEIGHT);
+				}
+			}
 			//System.out.println("Value of the plan: "+plan.getPlanValue());
 			return plan;
 	}
 	
 	//Generates a random map without water
+	
+	public Groundplan generateClusteredMapNoWater()
+	{
+		plan = new Groundplan(houses);
+		int j=0;
+		int k=0;
+		for(int i=0;i<Groundplan.MINIMUM_COTTAGE_PERCENTAGE*houses;i++)
+		{
+			plan.addResidence(new Cottage(2+10*k,2+10*j));
+			k++;
+			if(i!=0 && i%6==0)
+			{
+				j++;
+				k=0;
+			}
+		}
+
+		j=3;
+		k=0;
+		for(int i=0;i<Groundplan.MINIMUM_BUNGALOW_PERCENTAGE*houses;i++)
+		{
+
+			plan.addResidence(new Bungalow(Groundplan.WIDTH-3-13*k,j));
+			k++;
+			if(i==4 || i==9) {
+				j+=10.5;
+				k=0;
+			}
+		}
+		
+		j=6;
+		k=0;
+		for(int i=0;i<Groundplan.MINIMUM_MANSION_PERCENTAGE*houses;i++)
+		{
+			plan.addResidence(new Mansion(Groundplan.WIDTH-6-17*k,Groundplan.HEIGHT-j));
+			k++;
+			if(i==3 || i==6){
+				j+=16.5;
+				k=0;
+			}
+		}
+		return plan;
+	}
 	public Groundplan generateRandomNoWater()
 	{
 		plan = new Groundplan(houses);
@@ -209,6 +304,18 @@ public class DistrictGenerator {
 				plan.addWaterBody(new WaterBody(Groundplan.WIDTH-width,0, width, height));
 				plan.addWaterBody(new WaterBody(0,Groundplan.HEIGHT-height, width, height));
 				plan.addWaterBody(new WaterBody(Groundplan.WIDTH-width,Groundplan.HEIGHT-height, width, height));
+	}
+	
+	public Groundplan addWaterRandomNoWater(Groundplan plan)
+	{
+		double size = (Groundplan.WIDTH * Groundplan.HEIGHT * Groundplan.MINIMUM_WATER_PERCENTAGE)/4;
+		double height =Math.sqrt(size/4);
+		double width=size/height;
+			plan.addWaterBody(new WaterBody(15,50, width, height));
+			plan.addWaterBody(new WaterBody(Groundplan.WIDTH-width,15, width, height));
+			plan.addWaterBody(new WaterBody(15,Groundplan.HEIGHT-height, width, height));
+			plan.addWaterBody(new WaterBody(Groundplan.WIDTH-width,Groundplan.HEIGHT-height-15, width, height));
+			return plan;
 	}
 	
 }

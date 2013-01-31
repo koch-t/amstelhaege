@@ -19,8 +19,6 @@ public class SimulatedAnnealing {
 	//Private vars:
 	private Graph optimalplan;
 	private Pair<Double,Double> startTValues;
-	private Graph currentplan;
-	private Graph nextplan;
 	private SpringEmbedding springembedding;
 	private boolean isNextTrialAccepted;
 	private int iterator;
@@ -32,8 +30,6 @@ public class SimulatedAnnealing {
 		random = new Random();
 		optimalplan = new Graph(plan);
 		springembedding = new SpringEmbedding();
-		currentplan = new Graph(plan.clone());
-		nextplan = new Graph(plan.clone());
 		
 		double startValueOfT;
 	}
@@ -46,43 +42,60 @@ public class SimulatedAnnealing {
 	//Runs the algorithms
 	public Groundplan getOptimalSolution(int maxiter,Charges charges,GroundplanFrame frame){
 		
-		double currentvalue,nextvalue;
-		setCharges(charges);
-		
-		currentvalue=currentplan.getGroundplan().getPlanValue();
-		for(int i=0;i<=maxiter;i++)
-		{
-			springembedding.springEmbed(nextplan);
-			
-			//bereken startCurrentValue en startNextValue (deze zijn nodig voor berekenen T)
-			
-			nextvalue=nextplan.getGroundplan().getPlanValue()-getPenalty();
-			
-			//Print every solution of spring embedding algorithm
-			printSolution(frame);
-			
-			if(i==0) setT(currentvalue,nextvalue);
-			if(currentvalue<nextvalue){
-				cloneGroundPlans(nextvalue);
-			}
-			else
-			{
-				if(determineAcception(currentvalue, nextvalue))
-					cloneGroundPlans(nextvalue);
-			}
-			//Tuple.hookefactor+=0.01;
+		double currentvalue,nextvalue,optimalvalue=0;
+		Graph nextplan=null;
+		Graph currentplan=null;
+		try {
+			currentplan = new Graph(optimalplan.getGroundplan().clone());
+			nextplan = new Graph(optimalplan.getGroundplan().clone());
+		} catch (CloneNotSupportedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
+		setCharges(charges,nextplan);
+		
+			nextvalue=0;
+			for(int i=0;i<=maxiter;i++)
+			{
+				try{
+				springembedding.springEmbed(nextplan);
+				currentvalue=currentplan.getGroundplan().getPlanCummulativeDistance();
+				//bereken startCurrentValue en startNextValue (deze zijn nodig voor berekenen T)
+				nextvalue=nextplan.getGroundplan().getPlanCummulativeDistance()-getPenalty();
+				
+				if(i==0) setT(currentvalue,nextvalue);
+				
+				if(currentvalue<nextvalue){
+					if(optimalvalue<nextvalue)
+					{
+						optimalplan = new Graph(nextplan.getGroundplan().clone());
+						optimalvalue=nextvalue;
+					}
+					currentplan = new Graph(nextplan.getGroundplan().clone());
+				}
+				else
+				{
+					if(determineAcception(currentvalue, nextvalue))
+						currentplan = new Graph(nextplan.getGroundplan().clone());
+				}
+				printSolution(frame);
+			}
+				catch(Exception e){
+					printSolution(frame);
+				}
+		}
+		printSolution(frame);
 		return optimalplan.getGroundplan();
 	}
 
 	private void printSolution(GroundplanFrame frame) {
-		frame.setPlan(nextplan.getGroundplan());
-		System.out.println("Value: "+nextplan.getGroundplan().getPlanValue()+" feasible: "+nextplan.getGroundplan().isValid());
+		frame.setPlan(optimalplan.getGroundplan());
+		System.out.println("Value: "+optimalplan.getGroundplan().getPlanCummulativeDistance()+" feasible: "+optimalplan.getGroundplan().isValid());
 	}
 		
 	//Sets the charges of the vertices
-	private void setCharges(Charges charges) {
-		for(Vertex v:nextplan.getVertices())
+	private void setCharges(Charges charges,Graph nextplan) {
+		for(Vertex v: nextplan.getVertices())
 		{
 			if(v.getPlaceable() instanceof Cottage)
 				v.setMass(charges.cottagecharge);
@@ -96,12 +109,12 @@ public class SimulatedAnnealing {
 	private double getPenalty() {
 		double penalty=0;
 		
-		if(nextplan.getGroundplan().isValid())
+		if(optimalplan.getGroundplan().isValid())
 			return penalty;
-		for(Vertex v:nextplan.getVertices())
+		for(Vertex v:optimalplan.getVertices())
 		{
-			if(!nextplan.getGroundplan().isCorrectlyPlaced(v.getPlaceable()))
-				penalty+=1000000;
+			if(!optimalplan.getGroundplan().isCorrectlyPlaced(v.getPlaceable())){}
+				//penalty+=100; //No penalty
 		}
 		return penalty;
 	}
@@ -109,13 +122,6 @@ public class SimulatedAnnealing {
 	private void setT(double currentvalue, double nextvalue) {
 		startTValues = new Pair<Double,Double>(currentvalue,nextvalue);
 	}
-
-	private void cloneGroundPlans(double nextValue) {
-		if(nextValue>optimalplan.getGroundplan().getPlanValue())
-			optimalplan=nextplan.clone();
-		currentplan=nextplan.clone();
-	}
-
 
 	private boolean determineAcception(double currentValue, double nextValue) {
 		double x = (nextValue - currentValue) / getValueOfT();
