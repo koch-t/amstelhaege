@@ -3,6 +3,8 @@ import graph.Tuple;
 
 import java.io.FileWriter;
 import java.io.PrintWriter;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Random;
 
 import algorithms.SimulatedAnnealing;
@@ -32,21 +34,22 @@ public class DistrictPlanner {
 	private static final int SCALE = 1;
 
 	public DistrictPlanner() {
-		random = new Random(1);
+		final long startTime = System.currentTimeMillis();
+		random = new Random(10);
 		frame = new GroundplanFrame();
-		int houses=20;
+		int houses=60;
 		Groundplan plan= new Groundplan(houses);
 		generator = new DistrictGenerator(plan,houses);
 		plan = planWijk(houses,10000);
 		//printStartDistricts();
-		printSolution(plan);
+		printSolution(plan,startTime,System.currentTimeMillis());
 		
 	}
 	
 	/** Used for testing*/
 	public void printStartDistricts()
 	{
-		printSolution(generator.generateDistrict3());
+		//printSolution(generator.generateDistrict3());
 	}
 
 	/**
@@ -56,13 +59,13 @@ public class DistrictPlanner {
 		int infeasiblesolutions=0;
 		Groundplan optimalSolution=null;
 		double bestsolution=0;
-		Charges charges = new Charges(1,2,5,0,0);
+		Charges charges = new Charges(1,1,1,5,5);
 		Groundplan currentSolution=null;
 		
 		algorithm = new SimulatedAnnealing(generator.generateDistrict3());
 		optimalSolution=algorithm.getGroundplan();
 			//Calc initial solution:
-			Tuple.hookefactor=1;		
+			Tuple.hookefactor=5;	
 		do 
 		{
 				
@@ -92,14 +95,15 @@ public class DistrictPlanner {
 			//run x iterations of simulated annealing algorithm
 		algorithm = new SimulatedAnnealing(plan);			
 		solution= algorithm.getOptimalSolution(iter,charges,frame);
-			
-		printSolution(solution);
+
 		return solution;
 	}
 
-	private void printSolution(Groundplan solution) {
+	private void printSolution(Groundplan solution, long start, long end) {
 		frame.setPlan(solution);
 		System.out.println("Totale vrijstand: "+solution.getPlanCummulativeDistance()+" Feasible:"+solution.isValid()+" Value:"+solution.getPlanValue());
+		NumberFormat formatter = new DecimalFormat("#0.00000");
+		System.out.print("Execution time is " + formatter.format((end - start) / 1000d) + " seconds");
 	}
 
 	private void increaseCharges(Charges charges) {

@@ -61,7 +61,7 @@ public class SimulatedAnnealing {
 				springembedding.springEmbed(nextplan);
 				currentvalue=currentplan.getGroundplan().getPlanCummulativeDistance();
 				//bereken startCurrentValue en startNextValue (deze zijn nodig voor berekenen T)
-				nextvalue=nextplan.getGroundplan().getPlanCummulativeDistance()-getPenalty();
+				nextvalue=nextplan.getGroundplan().getPlanCummulativeDistance()-getPenalty(nextplan);
 				
 				if(i==0) setT(currentvalue,nextvalue);
 				
@@ -78,19 +78,20 @@ public class SimulatedAnnealing {
 					if(determineAcception(currentvalue, nextvalue))
 						currentplan = new Graph(nextplan.getGroundplan().clone());
 				}
-				printSolution(frame);
+				//printSolution(frame,optimalplan);
+				printSolution(frame,nextplan);
 			}
 				catch(Exception e){
-					printSolution(frame);
+					//printSolution(frame);
 				}
 		}
-		printSolution(frame);
+		printSolution(frame,optimalplan);
 		return optimalplan.getGroundplan();
 	}
 
-	private void printSolution(GroundplanFrame frame) {
-		frame.setPlan(optimalplan.getGroundplan());
-		System.out.println("Value: "+optimalplan.getGroundplan().getPlanCummulativeDistance()+" feasible: "+optimalplan.getGroundplan().isValid());
+	private void printSolution(GroundplanFrame frame,Graph plan) {
+		frame.setPlan(plan.getGroundplan());
+		System.out.println("Value: "+plan.getGroundplan().getPlanCummulativeDistance()+" feasible: "+optimalplan.getGroundplan().isValid());
 	}
 		
 	//Sets the charges of the vertices
@@ -106,15 +107,15 @@ public class SimulatedAnnealing {
 		}
 	}
 
-	private double getPenalty() {
+	private double getPenalty(Graph nextplan) {
 		double penalty=0;
 		
-		if(optimalplan.getGroundplan().isValid())
+		if(nextplan.getGroundplan().isValid())
 			return penalty;
-		for(Vertex v:optimalplan.getVertices())
+		for(Vertex v:nextplan.getVertices())
 		{
-			if(!optimalplan.getGroundplan().isCorrectlyPlaced(v.getPlaceable())){}
-				//penalty+=100; //No penalty
+			if(!nextplan.getGroundplan().isCorrectlyPlaced(v.getPlaceable())){}
+				penalty+=10; 
 		}
 		return penalty;
 	}

@@ -53,7 +53,7 @@ public class DistrictGenerator {
 		int k=0;
 		for(int i=0;i<Groundplan.MINIMUM_COTTAGE_PERCENTAGE*houses;i++)
 		{
-			plan.addResidence(new Cottage(2+10*k,2+10*j+20));
+			plan.addResidence(new Cottage(2+10*k,2+10*j+14));
 			k++;
 			if(i!=0 && i%6==0)
 			{
@@ -67,10 +67,10 @@ public class DistrictGenerator {
 		for(int i=0;i<Groundplan.MINIMUM_BUNGALOW_PERCENTAGE*houses;i++)
 		{
 
-			plan.addResidence(new Bungalow(Groundplan.WIDTH-20-13*k,j+20));
+			plan.addResidence(new Bungalow(Groundplan.WIDTH-20-13*k,j+13));
 			k++;
 			if(i==4 || i==9) {
-				j+=10.5;
+				j+=11;
 				k=0;
 			}
 		}
@@ -82,7 +82,7 @@ public class DistrictGenerator {
 			plan.addResidence(new Mansion(Groundplan.WIDTH-25-17*k,Groundplan.HEIGHT-j-20));
 			k++;
 			if(i==3 || i==6){
-				j+=16.5;
+				j+=17;
 				k=0;
 			}
 		}
