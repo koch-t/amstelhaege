@@ -42,7 +42,7 @@ public class SimulatedAnnealing {
 	//Runs the algorithms
 	public Groundplan getOptimalSolution(int maxiter,Charges charges,GroundplanFrame frame){
 		
-		double currentvalue,nextvalue,optimalvalue=0;
+		double currentvalue,nextvalue,optimalvalue=Double.NEGATIVE_INFINITY;
 		Graph nextplan=null;
 		Graph currentplan=null;
 		try {
@@ -59,7 +59,7 @@ public class SimulatedAnnealing {
 			{
 				try{
 				springembedding.springEmbed(nextplan);
-				currentvalue=currentplan.getGroundplan().getPlanCummulativeDistance();
+				currentvalue=currentplan.getGroundplan().getPlanCummulativeDistance()-getPenalty(currentplan);
 				//bereken startCurrentValue en startNextValue (deze zijn nodig voor berekenen T)
 				nextvalue=nextplan.getGroundplan().getPlanCummulativeDistance()-getPenalty(nextplan);
 				

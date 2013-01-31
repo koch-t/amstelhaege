@@ -82,9 +82,9 @@ public class Graph{
 		for (Residence r: plan.getResidences()){
 			vertices.add(new Vertex(r));
 		}
-		for (WaterBody w: plan.getWaterBodies()){
+	/*	for (WaterBody w: plan.getWaterBodies()){
 			vertices.add(new Vertex(w));
-		}
+		}*/
 		return vertices;
 	}
 
@@ -95,31 +95,7 @@ public class Graph{
 	public void setVertices(ArrayList<Vertex> vertices) {
 		this.vertices = vertices;
 	}
-	
-	/*public Graph clone()
-	{
-		ArrayList<Vertex> clonelist = new ArrayList<Vertex>();
-		Graph clone = new Graph();
-		try {
-			clone = new Graph(plan.clone());
-		} catch (CloneNotSupportedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		for(Vertex v:vertices)
-		{
-			if(!v.iscloned)
-			{
-				cloneV(clonelist, v);
-			}
-		}
-		clone.vertices=clonelist;
-		changeVertexCloneState(clone,false);
-		return clone;
-	}*/
-	
-
-	
+		
 	private void changeVertexCloneState(Graph clone, boolean b) {
 		for(Vertex v:vertices)
 			v.iscloned=false;
@@ -132,24 +108,5 @@ public class Graph{
 		return plan;
 	}
 	
-	/*private void cloneV(ArrayList<Vertex> clonelist, Vertex v) {
-		Vertex cloneofv = null;
-		
-		try {
-			cloneofv=v.clone();
-		} catch (CloneNotSupportedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		while(!clonelist.contains(cloneofv))
-		{
-			clonelist.add(cloneofv);
-			if(cloneofv.getToVertex()!=null)
-				cloneofv=cloneofv.getToVertex();
-		}
-		if(cloneofv.isfixed)
-			clonelist.remove(cloneofv);
-			
-	}*/
 }
 

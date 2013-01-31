@@ -37,7 +37,7 @@ public class DistrictPlanner {
 		final long startTime = System.currentTimeMillis();
 		random = new Random(10);
 		frame = new GroundplanFrame();
-		int houses=60;
+		int houses=40;
 		Groundplan plan= new Groundplan(houses);
 		generator = new DistrictGenerator(plan,houses);
 		plan = planWijk(houses,10000);
@@ -59,16 +59,13 @@ public class DistrictPlanner {
 		int infeasiblesolutions=0;
 		Groundplan optimalSolution=null;
 		double bestsolution=0;
-		Charges charges = new Charges(1,1,1,5,5);
+		Charges charges = new Charges(0.1,5,10,0,0);
 		Groundplan currentSolution=null;
 		
-		algorithm = new SimulatedAnnealing(generator.generateDistrict3());
+		algorithm = new SimulatedAnnealing(generator.generateClusteredMapNoWater());
 		optimalSolution=algorithm.getGroundplan();
 			//Calc initial solution:
-			Tuple.hookefactor=5;	
-		do 
-		{
-				
+			Tuple.hookefactor=1;					
 				currentSolution = runSimulatedAnnealingChangingCharge(houses,
 						infeasiblesolutions, charges, currentSolution,iter,algorithm.getGroundplan());
 				if(currentSolution.getPlanCummulativeDistance()>optimalSolution.getPlanCummulativeDistance())
@@ -82,7 +79,6 @@ public class DistrictPlanner {
 					bestsolution=optimalSolution.getPlanCummulativeDistance();
 					System.out.println("Best value: "+bestsolution);
 				}
-			}while(!optimalSolution.isValid());
 		return optimalSolution;
 	}
 
