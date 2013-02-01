@@ -37,19 +37,19 @@ public class DistrictPlanner {
 		final long startTime = System.currentTimeMillis();
 		random = new Random(10);
 		frame = new GroundplanFrame();
-		int houses=40;
+		int houses=20;
 		Groundplan plan= new Groundplan(houses);
 		generator = new DistrictGenerator(plan,houses);
-		plan = planWijk(houses,10000);
-		//printStartDistricts();
-		printSolution(plan,startTime,System.currentTimeMillis());
+		//plan = planWijk(houses,10000);
+		printStartDistricts();
+		//printSolution(plan,startTime,System.currentTimeMillis());
 		
 	}
 	
 	/** Used for testing*/
 	public void printStartDistricts()
 	{
-		//printSolution(generator.generateDistrict3());
+		printSolution(generator.generateDistrict4());
 	}
 
 	/**
@@ -59,16 +59,16 @@ public class DistrictPlanner {
 		int infeasiblesolutions=0;
 		Groundplan optimalSolution=null;
 		double bestsolution=0;
-		Charges charges = new Charges(0.1,5,10,0,0);
+		Charges charges = new Charges(0.3,5,10,0,0);
 		Groundplan currentSolution=null;
 		
-		algorithm = new SimulatedAnnealing(generator.generateClusteredMapNoWater());
+		algorithm = new SimulatedAnnealing(generator.generateDistrict3());
 		optimalSolution=algorithm.getGroundplan();
 			//Calc initial solution:
 			Tuple.hookefactor=1;					
 				currentSolution = runSimulatedAnnealingChangingCharge(houses,
 						infeasiblesolutions, charges, currentSolution,iter,algorithm.getGroundplan());
-				if(currentSolution.getPlanCummulativeDistance()>optimalSolution.getPlanCummulativeDistance())
+				if(currentSolution.getPlanValue()>optimalSolution.getPlanValue())
 				{
 					try {
 						optimalSolution=currentSolution.clone();
@@ -76,7 +76,7 @@ public class DistrictPlanner {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					bestsolution=optimalSolution.getPlanCummulativeDistance();
+					bestsolution=optimalSolution.getPlanValue();
 					System.out.println("Best value: "+bestsolution);
 				}
 		return optimalSolution;
@@ -97,9 +97,15 @@ public class DistrictPlanner {
 
 	private void printSolution(Groundplan solution, long start, long end) {
 		frame.setPlan(solution);
-		System.out.println("Totale vrijstand: "+solution.getPlanCummulativeDistance()+" Feasible:"+solution.isValid()+" Value:"+solution.getPlanValue());
+		System.out.println("Totale vrijstand: "+solution.getPlanValue()+" Feasible:"+solution.isValid()+" Value:"+solution.getPlanValue());
 		NumberFormat formatter = new DecimalFormat("#0.00000");
 		System.out.print("Execution time is " + formatter.format((end - start) / 1000d) + " seconds");
+	}
+	
+	private void printSolution(Groundplan solution)
+	{
+		frame.setPlan(solution);
+		System.out.println("feasible: "+solution.isValid());
 	}
 
 	private void increaseCharges(Charges charges) {

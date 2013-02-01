@@ -59,9 +59,9 @@ public class SimulatedAnnealing {
 			{
 				try{
 				springembedding.springEmbed(nextplan);
-				currentvalue=currentplan.getGroundplan().getPlanCummulativeDistance()-getPenalty(currentplan);
+				currentvalue=currentplan.getGroundplan().getPlanValue()-getPenalty(currentplan);
 				//bereken startCurrentValue en startNextValue (deze zijn nodig voor berekenen T)
-				nextvalue=nextplan.getGroundplan().getPlanCummulativeDistance()-getPenalty(nextplan);
+				nextvalue=nextplan.getGroundplan().getPlanValue()-getPenalty(nextplan);
 				
 				if(i==0) setT(currentvalue,nextvalue);
 				
@@ -91,7 +91,7 @@ public class SimulatedAnnealing {
 
 	private void printSolution(GroundplanFrame frame,Graph plan) {
 		frame.setPlan(plan.getGroundplan());
-		System.out.println("Value: "+plan.getGroundplan().getPlanCummulativeDistance()+" feasible: "+optimalplan.getGroundplan().isValid());
+		System.out.println("Value: "+plan.getGroundplan().getPlanValue()+" feasible: "+optimalplan.getGroundplan().isValid());
 	}
 		
 	//Sets the charges of the vertices
@@ -115,7 +115,7 @@ public class SimulatedAnnealing {
 		for(Vertex v:nextplan.getVertices())
 		{
 			if(!nextplan.getGroundplan().isCorrectlyPlaced(v.getPlaceable())){}
-				penalty+=10; 
+				penalty+=100000; 
 		}
 		return penalty;
 	}
